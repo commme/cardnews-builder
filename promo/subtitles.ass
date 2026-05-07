@@ -1,0 +1,31 @@
+[Script Info]
+Title: Card News Builder Promo v2 (aspect+output+motion focus)
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1080
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: KO,Pretendard Black,56,&H00FFFFFF,&H00000000,&HCC000000,1,3,0,0,8,30,30,60,1
+Style: EN,Inter SemiBold,36,&H00FFFFFF,&H00000000,&HCC000000,1,3,0,0,2,30,30,60,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.30,0:00:02.70,KO,,0,0,0,,카드뉴스 만들기, 막막하셨죠?
+Dialogue: 0,0:00:00.30,0:00:02.70,EN,,0,0,0,,Tired of making card news?
+Dialogue: 0,0:00:03.30,0:00:06.70,KO,,0,0,0,,팔레트 1번 + Scale-pop 모션
+Dialogue: 0,0:00:03.30,0:00:06.70,EN,,0,0,0,,P-1 + scale-pop motion
+Dialogue: 0,0:00:07.30,0:00:10.70,KO,,0,0,0,,4가지 비율, 즉시 전환
+Dialogue: 0,0:00:07.30,0:00:10.70,EN,,0,0,0,,4 aspects, instant switch
+Dialogue: 0,0:00:11.30,0:00:14.70,KO,,0,0,0,,출력 4종 · PNG GIF Reels Remotion
+Dialogue: 0,0:00:11.30,0:00:14.70,EN,,0,0,0,,4 outputs · PNG GIF Reels Remotion
+Dialogue: 0,0:00:15.30,0:00:18.70,KO,,0,0,0,,팔레트 11번 · Glitch 모션
+Dialogue: 0,0:00:15.30,0:00:18.70,EN,,0,0,0,,P-11 · Glitch motion
+Dialogue: 0,0:00:19.30,0:00:22.70,KO,,0,0,0,,팔레트 19번 · Sparkle 모션
+Dialogue: 0,0:00:19.30,0:00:22.70,EN,,0,0,0,,P-19 · Sparkle motion
+Dialogue: 0,0:00:23.30,0:00:26.70,KO,,0,0,0,,{\fs66}20 × 50 × 60 = 60,000 조합
+Dialogue: 0,0:00:23.30,0:00:26.70,EN,,0,0,0,,20 × 50 × 60 = 60,000
+Dialogue: 0,0:00:27.30,0:00:29.70,KO,,0,0,0,,MIT · 오픈소스 · 무료
+Dialogue: 0,0:00:27.30,0:00:29.70,EN,,0,0,0,,MIT · Open Source · Free

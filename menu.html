@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Card News Final · 조합 빌더 (20×50×60)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" />
+<style id="app-style">
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Pretendard Variable', sans-serif; background: #0A0A0C; color: #EDEDEF; min-height: 100vh; }
+:root {
+  --current-bg: #141414;
+  --current-fg: #F4E5D9;
+  --current-accent: #DA7756;
+  --current-muted: #8B8B92;
+  --current-line: #26262c;
+}
+
+/* ===== Task 8: Header ===== */
+#app-header {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid #26262c;
+  background: linear-gradient(180deg, rgba(218,119,86,0.08), transparent);
+}
+.h-title {
+  font-size: 32px; font-weight: 900; letter-spacing: -0.03em;
+  background: linear-gradient(90deg, #DA7756, #00F5A0, #FF0080);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.h-sub { color: #8B8B92; font-size: 13px; margin-top: 4px; }
+.h-pill { display:inline-block; padding:3px 10px; border-radius:999px; background:#00F5A0; color:#000; font-size:11px; font-weight:800; margin-right:6px; }
+
+/* ===== Task 9: 3-Panel Layout ===== */
+#app-main {
+  display: grid;
+  grid-template-columns: 240px 1fr 400px;
+  gap: 20px;
+  padding: 20px;
+  min-height: calc(100vh - 120px);
+}
+#panel-left, #panel-right {
+  background: #18181c; border:1px solid #26262c; border-radius:14px; padding:18px;
+  position:sticky; top:20px;
+  max-height: calc(100vh - 40px); overflow-y: auto;
+}
+/* compact palette chips so motion list is visible without scrolling the panel */
+#panel-left .p-chip-swatch { height: 24px; }
+#panel-left .p-chip-info { padding: 4px 6px; }
+#panel-left .p-chip-name { font-size: 10px; }
+#panel-left .palette-chips { gap: 6px; margin-bottom: 16px; }
+#panel-center { padding:0; }
+
+/* ===== Task 10: Palette Chips ===== */
+.section-title { font-size:11px; font-weight:800; letter-spacing:1px; color:#00F5A0; text-transform:uppercase; margin: 4px 0 12px; }
+.palette-chips { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-bottom: 24px; }
+.p-chip { cursor:pointer; border-radius:8px; overflow:hidden; border:2px solid transparent; transition: transform 0.15s, border-color 0.15s; }
+.p-chip:hover { transform: translateY(-2px); border-color:#26262c; }
+.p-chip.selected { border-color:#00F5A0; }
+.p-chip-swatch { display:flex; height: 32px; }
+.p-chip-swatch > div { flex:1; }
+.p-chip-info { padding: 6px 8px; background:#0A0A0C; }
+.p-chip-code { font-family:'Space Mono',monospace; font-size:9px; color:#8B8B92; }
+.p-chip-name { font-size:11px; font-weight:800; color:#EDEDEF; }
+
+/* ===== Task 11: Motion List ===== */
+.motion-list { max-height: 400px; overflow-y:auto; border-top:1px solid #26262c; padding-top: 12px; }
+.m-item { display:flex; align-items:center; padding:6px 8px; cursor:pointer; border-radius:6px; font-size:11px; gap:6px; }
+.m-item:hover { background:#0A0A0C; }
+.m-item.selected { background:#00F5A0; color:#000; font-weight:800; }
+.m-id { font-family:'Space Mono',monospace; font-size:10px; min-width: 30px; color:#8B8B92; }
+.m-item.selected .m-id { color:#000; }
+.m-name { flex:1; }
+.m-rank { font-size:10px; padding:1px 6px; border-radius:999px; background:#FFD166; color:#000; font-weight:800; }
+.m-rank.r2 { background:#90E0EF; }
+.m-rank.r3 { background:#26262c; color:#8B8B92; }
+.m-cat { font-size:9px; color:#8B8B92; padding: 8px 0 4px; text-transform:uppercase; letter-spacing:0.5px; }
+
+/* ===== Task 12: Preset Grid ===== */
+#panel-center { display:flex; flex-direction: column; gap: 32px; }
+.preset-section { padding: 0 8px; }
+.preset-section h2 { font-size: 18px; font-weight: 900; color:#EDEDEF; margin-bottom: 4px; letter-spacing:-0.02em; }
+.preset-section .ps-desc { color:#8B8B92; font-size:12px; margin-bottom: 14px; }
+.preset-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:14px; }
+.preset-card { background:#18181c; border:2px solid #26262c; border-radius:12px; overflow:hidden; cursor:pointer; transition: transform 0.15s, border-color 0.15s; }
+.preset-card:hover { border-color:#3a3a44; transform: translateY(-2px); }
+.preset-card.selected { border-color:#00F5A0; }
+.pc-mark { aspect-ratio: 1; background: var(--current-bg); color: var(--current-fg); display:flex; align-items:center; justify-content:center; padding:14px; transition: background 200ms ease, color 200ms ease; overflow:hidden; position:relative; }
+.pc-info { padding: 10px 12px 12px; background:#0A0A0C; }
+.pc-id { font-family:'Space Mono',monospace; font-size:9px; color:#8B8B92; }
+.pc-name { font-size:13px; font-weight:800; color:#EDEDEF; }
+.pc-desc { font-size:10px; color:#8B8B92; margin-top:2px; line-height:1.3; }
+
+/* ===== Task 13: Classic Mini-Marks (1~10) ===== */
+.mm-hero-bold { font-size: 56px; font-weight: 900; line-height: 0.9; color: var(--current-fg); letter-spacing:-0.04em; text-align:center; }
+.mm-hero-bold span { color: var(--current-accent); }
+.mm-list-card { display:flex; flex-direction:column; gap:6px; width:100%; }
+.mm-list-card .mli { display:flex; gap:8px; align-items:center; padding: 6px 8px; background: rgba(255,255,255,0.05); border-radius:4px; font-size:10px; color: var(--current-fg); }
+.mm-list-card .mli b { color: var(--current-accent); font-family:'Space Mono',monospace; }
+.mm-quote-center { text-align:center; }
+.mm-quote-center .q { font-family: serif; color: var(--current-accent); font-size: 64px; line-height: 0.5; font-weight: 900; }
+.mm-quote-center .t { font-size: 12px; color: var(--current-fg); margin-top: 16px; font-style: italic; }
+.mm-stat-focus { text-align:center; }
+.mm-stat-focus .num { font-size: 80px; font-weight: 900; color: var(--current-accent); line-height: 1; letter-spacing:-0.05em; }
+.mm-stat-focus .lbl { font-size: 10px; color: var(--current-fg); text-transform:uppercase; letter-spacing:1px; }
+.mm-photo-frame { width:100%; height:100%; display:flex; flex-direction:column; }
+.mm-photo-frame .ph { flex:2; background: linear-gradient(135deg, var(--current-accent), var(--current-muted)); }
+.mm-photo-frame .tx { flex:1; background: var(--current-bg); padding:8px; font-size:10px; font-weight:800; color: var(--current-fg); display:flex; align-items:center; }
+.mm-editorial { padding: 12px 0; border-top: 1px solid var(--current-line); border-bottom: 1px solid var(--current-line); width:100%; text-align:center; }
+.mm-editorial .ed-num { font-family: serif; font-size:11px; color: var(--current-accent); margin-bottom:6px; letter-spacing:2px; }
+.mm-editorial .ed-t { font-family: serif; font-size: 22px; font-weight: 900; color: var(--current-fg); line-height: 1.1; }
+.mm-grid-poster { display:grid; grid-template-columns: repeat(2,1fr); grid-template-rows: repeat(2,1fr); gap:4px; width:100%; height:100%; }
+.mm-grid-poster > div { background: var(--current-accent); border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color: var(--current-bg); }
+.mm-grid-poster > div:nth-child(2) { background: var(--current-fg); color: var(--current-bg); }
+.mm-grid-poster > div:nth-child(3) { background: var(--current-muted); }
+.mm-split-screen { display:flex; width:100%; height:100%; }
+.mm-split-screen > div { flex:1; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; }
+.mm-split-screen .l { background: var(--current-accent); color: var(--current-bg); }
+.mm-split-screen .r { background: var(--current-fg); color: var(--current-bg); }
+.mm-headline-news { width:100%; }
+.mm-headline-news .tag { display:inline-block; padding: 2px 6px; background: var(--current-accent); color: var(--current-bg); font-size:8px; font-weight:900; letter-spacing:1px; }
+.mm-headline-news .h { font-family: serif; font-size: 22px; font-weight: 900; line-height: 1; color: var(--current-fg); margin-top: 6px; }
+.mm-headline-news .sub { font-size:9px; color: var(--current-muted); margin-top:6px; line-height:1.3; }
+.mm-checklist { display:flex; flex-direction:column; gap:6px; width:100%; }
+.mm-checklist .ck { display:flex; align-items:center; gap:8px; font-size:11px; color: var(--current-fg); }
+.mm-checklist .ck::before { content:'☑'; color: var(--current-accent); font-weight:900; }
+
+/* ===== Task 14: Trendy Mini-Marks (11~25) ===== */
+.mm-neo-brutalism { padding:14px; background: var(--current-fg); color: var(--current-bg); font-weight:900; font-size:18px; border:3px solid var(--current-bg); box-shadow: 6px 6px 0 var(--current-accent); width:80%; }
+.mm-risograph { background: var(--current-fg); position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.mm-risograph::before, .mm-risograph::after { content:''; position:absolute; width:60%; height:60%; border-radius:50%; mix-blend-mode: multiply; opacity:0.7; }
+.mm-risograph::before { background: var(--current-accent); top:10%; left:10%; }
+.mm-risograph::after { background: var(--current-bg); top:25%; left:25%; }
+.mm-risograph .t { position:relative; z-index:2; font-weight:900; color: var(--current-fg); mix-blend-mode: difference; font-size:14px; }
+.mm-glass-morphism { background: linear-gradient(135deg, var(--current-accent), var(--current-bg)); width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.mm-glass-morphism .glass { background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,0.3); padding:12px 18px; border-radius:14px; color: var(--current-fg); font-weight:800; font-size:13px; }
+.mm-y2k-chrome { background: linear-gradient(135deg, #c0c0c0, var(--current-accent), #ffffff); width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:22px; color: var(--current-bg); text-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+.mm-bauhaus { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap:0; width:100%; height:100%; }
+.mm-bauhaus > div:nth-child(1) { background: var(--current-accent); }
+.mm-bauhaus > div:nth-child(2) { background: var(--current-fg); border-radius:0 0 100% 0; }
+.mm-bauhaus > div:nth-child(3) { background: var(--current-fg); }
+.mm-bauhaus > div:nth-child(4) { background: var(--current-bg); }
+.mm-claymorphism { width:100%; height:100%; background: var(--current-fg); display:flex; align-items:center; justify-content:center; gap:8px; }
+.mm-claymorphism .blob { width: 36px; height: 36px; border-radius: 50%; box-shadow: inset -3px -3px 6px rgba(0,0,0,0.2), inset 3px 3px 6px rgba(255,255,255,0.5); }
+.mm-claymorphism .b1 { background: var(--current-accent); }
+.mm-claymorphism .b2 { background: var(--current-muted); }
+.mm-claymorphism .b3 { background: var(--current-bg); }
+.mm-memphis { background: var(--current-fg); width:100%; height:100%; padding:10px; position:relative; display:flex; align-items:center; justify-content:center; }
+.mm-memphis::before { content:''; position:absolute; top:8px; left:8px; width:14px; height:14px; background: var(--current-accent); }
+.mm-memphis::after { content:''; position:absolute; bottom:8px; right:8px; width:18px; height:18px; border:3px solid var(--current-bg); border-radius:50%; }
+.mm-memphis .t { font-weight:900; font-size:18px; color: var(--current-bg); }
+.mm-vaporwave { background: linear-gradient(180deg, var(--current-accent) 0%, var(--current-bg) 100%); position:relative; width:100%; height:100%; overflow:hidden; }
+.mm-vaporwave .grid { position:absolute; bottom:0; left:0; right:0; height:50%; background-image: linear-gradient(to right, var(--current-fg) 1px, transparent 1px), linear-gradient(to top, var(--current-fg) 1px, transparent 1px); background-size: 20px 20px; transform: perspective(60px) rotateX(45deg); transform-origin: bottom; opacity: 0.5; }
+.mm-vaporwave .sun { position:absolute; top:20%; left:50%; transform:translateX(-50%); width:60px; height:60px; border-radius:50%; background: var(--current-fg); opacity:0.9; }
+.mm-sticker-pop { background: var(--current-bg); width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.mm-sticker-pop .sticker { background: var(--current-accent); color: var(--current-fg); padding: 10px 18px; border-radius:24px; border: 3px solid var(--current-fg); font-weight:900; font-size:18px; transform: rotate(-6deg); }
+.mm-tape-label { background: var(--current-fg); padding: 14px; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.mm-tape-label .tape { background: var(--current-accent); padding: 8px 16px; border-left: dashed 2px var(--current-bg); border-right: dashed 2px var(--current-bg); transform: rotate(-3deg); font-weight:900; font-size:14px; color: var(--current-bg); }
+.mm-newspaper { background: var(--current-fg); padding: 14px; width:100%; height:100%; font-family: serif; color: var(--current-bg); }
+.mm-newspaper .top { font-size: 9px; letter-spacing:3px; text-align:center; padding-bottom:6px; border-bottom: 1px solid var(--current-bg); }
+.mm-newspaper .h { font-weight:900; font-size:14px; line-height:1.1; margin-top:6px; }
+.mm-newspaper .body { font-size:8px; columns:2; column-gap:6px; margin-top:4px; line-height:1.2; }
+.mm-retro-tv { background: var(--current-bg); border-radius:12px; padding:8px; width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.mm-retro-tv .screen { color: var(--current-accent); font-family:'Space Mono',monospace; font-weight:900; font-size:16px; }
+.mm-retro-tv::after { content:''; position:absolute; inset:0; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px); pointer-events:none; }
+.mm-zine { background: var(--current-fg); padding: 14px; width:100%; height:100%; position:relative; }
+.mm-zine .t { font-family: serif; font-weight:900; font-size:24px; color: var(--current-bg); }
+.mm-zine .stamp { background: var(--current-accent); display:inline-block; padding:2px 6px; font-size:10px; font-weight:800; transform: rotate(-4deg); margin-top:6px; }
+.mm-polaroid { background: var(--current-fg); padding: 8px 8px 22px; border-radius:2px; box-shadow: 4px 4px 12px rgba(0,0,0,0.4); width: 70%; transform: rotate(-3deg); }
+.mm-polaroid .pic { background: linear-gradient(135deg, var(--current-accent), var(--current-muted)); aspect-ratio: 1; border-radius:1px; }
+.mm-polaroid .ph-cap { font-size:10px; text-align:center; padding-top:6px; color: var(--current-bg); font-family: serif; }
+.mm-marker-sketch { background: var(--current-fg); padding: 14px; width:100%; height:100%; }
+.mm-marker-sketch .h { font-weight:900; font-size:18px; color: var(--current-bg); border-bottom: 6px solid var(--current-accent); display:inline; padding-bottom:2px; line-height:1.4; }
+.mm-marker-sketch .sub { font-size:11px; color: var(--current-bg); margin-top:8px; }
+
+/* ===== Task 15: Typography Mini-Marks (26~33) ===== */
+.mm-faux-3d-text { font-size: 48px; font-weight: 900; color: var(--current-accent); letter-spacing:-0.03em; line-height:1; text-shadow: 1px 1px 0 var(--current-fg), 2px 2px 0 var(--current-fg), 3px 3px 0 var(--current-fg), 4px 4px 0 var(--current-fg), 5px 5px 0 var(--current-bg); }
+.mm-kinetic-typo { font-size: 28px; font-weight: 900; color: var(--current-fg); display:flex; gap:4px; }
+.mm-kinetic-typo span { display:inline-block; }
+.mm-kinetic-typo span:nth-child(1) { color: var(--current-accent); transform: translateY(-4px); }
+.mm-kinetic-typo span:nth-child(2) { transform: translateY(2px); }
+.mm-kinetic-typo span:nth-child(3) { color: var(--current-accent); transform: translateY(-2px); }
+.mm-typewriter { font-family:'Space Mono',monospace; font-size: 20px; color: var(--current-fg); border-right: 3px solid var(--current-accent); padding-right: 4px; }
+.mm-outline-text { font-size: 56px; font-weight: 900; color: transparent; -webkit-text-stroke: 2px var(--current-fg); letter-spacing:-0.04em; }
+.mm-graffiti { font-family: 'Impact', sans-serif; font-size: 36px; font-weight: 900; color: var(--current-accent); transform: skew(-8deg); text-shadow: 3px 3px 0 var(--current-bg); }
+.mm-serif-mono { text-align:center; }
+.mm-serif-mono .a { font-family: serif; font-size:32px; font-weight:900; color: var(--current-fg); font-style:italic; }
+.mm-serif-mono .b { font-family:'Space Mono',monospace; font-size:11px; color: var(--current-accent); margin-top:4px; letter-spacing:2px; }
+.mm-stamp-text { display:inline-block; padding: 10px 18px; border: 4px solid var(--current-accent); color: var(--current-accent); font-weight:900; font-size:20px; transform: rotate(-6deg); letter-spacing:2px; opacity:0.85; }
+.mm-ransom-note { display:flex; gap:2px; flex-wrap:wrap; justify-content:center; }
+.mm-ransom-note span { padding: 4px 6px; font-weight:900; font-size: 18px; line-height:1; }
+.mm-ransom-note span:nth-child(1) { background: var(--current-accent); color: var(--current-bg); transform: rotate(-4deg); }
+.mm-ransom-note span:nth-child(2) { background: var(--current-fg); color: var(--current-bg); transform: rotate(2deg); }
+.mm-ransom-note span:nth-child(3) { background: var(--current-bg); color: var(--current-fg); border:1px solid var(--current-fg); transform: rotate(-2deg); }
+.mm-ransom-note span:nth-child(4) { background: var(--current-muted); color: var(--current-bg); transform: rotate(3deg); }
+
+/* ===== Task 16: Data Mini-Marks (42~50) ===== */
+.mm-infographic { display:flex; gap:12px; align-items:center; }
+.mm-infographic .ico { width:48px; height:48px; border-radius:50%; background: var(--current-accent); display:flex; align-items:center; justify-content:center; font-size:22px; color: var(--current-bg); }
+.mm-infographic .v { font-size: 32px; font-weight:900; color: var(--current-fg); }
+.mm-infographic .l { font-size:9px; color: var(--current-muted); letter-spacing:1px; text-transform:uppercase; }
+.mm-timeline { width:100%; }
+.mm-timeline .line { height:2px; background: var(--current-accent); position:relative; margin: 16px 0; }
+.mm-timeline .dot { position:absolute; top:-4px; width:10px; height:10px; border-radius:50%; background: var(--current-accent); border: 2px solid var(--current-bg); }
+.mm-timeline .lbl { position:absolute; top:8px; font-size:9px; color: var(--current-fg); transform: translateX(-50%); white-space:nowrap; }
+.mm-comparison-table { display:flex; gap:6px; width:100%; }
+.mm-comparison-table > div { flex:1; padding:10px; border-radius:6px; text-align:center; }
+.mm-comparison-table .a { background: var(--current-fg); color: var(--current-bg); font-weight:800; font-size:14px; }
+.mm-comparison-table .vs { flex:0 0 auto; padding:10px 4px; color: var(--current-accent); font-weight:900; }
+.mm-comparison-table .b { background: var(--current-accent); color: var(--current-bg); font-weight:800; font-size:14px; }
+.mm-bar-chart { display:flex; align-items:flex-end; gap:6px; width:100%; height:80%; }
+.mm-bar-chart > div { flex:1; background: var(--current-accent); border-radius:2px 2px 0 0; }
+.mm-donut-chart { width:100px; height:100px; border-radius:50%; background: conic-gradient(var(--current-accent) 0% 70%, var(--current-muted) 70% 100%); display:flex; align-items:center; justify-content:center; position:relative; }
+.mm-donut-chart::before { content:''; position:absolute; inset:18px; background: var(--current-bg); border-radius:50%; }
+.mm-donut-chart .pct { position:relative; z-index:2; font-size:18px; font-weight:900; color: var(--current-fg); }
+.mm-flow-diagram { display:flex; align-items:center; gap:6px; }
+.mm-flow-diagram .node { padding: 6px 10px; border:1.5px solid var(--current-accent); border-radius:4px; color: var(--current-fg); font-weight:800; font-size:11px; }
+.mm-flow-diagram .arrow { color: var(--current-accent); font-weight:900; }
+.mm-mind-map { width:100%; height:100%; position:relative; }
+.mm-mind-map .center { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); padding:6px 10px; background: var(--current-accent); color: var(--current-bg); border-radius:4px; font-weight:800; font-size:11px; }
+.mm-mind-map .leaf { position:absolute; padding:3px 6px; background: var(--current-fg); color: var(--current-bg); font-size:9px; border-radius:3px; font-weight:700; }
+.mm-mind-map .leaf.l1 { top:10%; left:10%; }
+.mm-mind-map .leaf.l2 { top:10%; right:10%; }
+.mm-mind-map .leaf.l3 { bottom:10%; left:10%; }
+.mm-mind-map .leaf.l4 { bottom:10%; right:10%; }
+.mm-ranking-list { width:100%; display:flex; flex-direction:column; gap:4px; }
+.mm-ranking-list .row { display:flex; gap:8px; align-items:center; padding: 4px 6px; background: rgba(255,255,255,0.05); border-radius:3px; font-size:10px; color: var(--current-fg); }
+.mm-ranking-list .rk { font-weight:900; font-family:'Space Mono',monospace; color: var(--current-accent); min-width:18px; }
+.mm-before-after { display:flex; width:100%; height:100%; border:2px solid var(--current-line); }
+.mm-before-after > div { flex:1; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; }
+.mm-before-after .b { background: var(--current-muted); color: var(--current-bg); }
+.mm-before-after .a { background: var(--current-accent); color: var(--current-bg); }
+
+/* ===== Task 17: Novelty Mini-Marks (57~64) ===== */
+.mm-holographic { width:100%; height:100%; background: linear-gradient(135deg, #ff0080, #ff8c00, #40e0d0, #ff0080); background-size: 200% 200%; animation: holoshift 4s ease infinite; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px; color:#fff; mix-blend-mode: difference; }
+@keyframes holoshift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+.mm-liquid-metal { width:100%; height:100%; background: radial-gradient(ellipse at 30% 30%, #fff, var(--current-accent), var(--current-bg)); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px; color: var(--current-fg); }
+.mm-aurora { width:100%; height:100%; background: linear-gradient(135deg, var(--current-accent) 0%, var(--current-fg) 50%, var(--current-bg) 100%); background-size: 200% 200%; animation: holoshift 6s ease infinite; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px; color: var(--current-bg); text-shadow: 0 0 8px rgba(0,0,0,0.5); }
+.mm-neon-sign { background: var(--current-bg); width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.mm-neon-sign .t { color: var(--current-accent); font-size:22px; font-weight:900; text-shadow: 0 0 4px var(--current-accent), 0 0 8px var(--current-accent), 0 0 14px var(--current-accent); }
+.mm-crystal-facet { width:0; height:0; border-left: 60px solid transparent; border-right: 60px solid transparent; border-bottom: 90px solid var(--current-accent); position:relative; filter: drop-shadow(0 0 6px var(--current-accent)); }
+.mm-shader-mesh { width:100%; height:100%; background: conic-gradient(from 0deg, var(--current-accent), var(--current-fg), var(--current-bg), var(--current-accent)); filter: blur(4px); }
+.mm-ai-dream { width:100%; height:100%; background: radial-gradient(ellipse at 50% 30%, var(--current-fg), var(--current-accent) 40%, var(--current-bg)); filter: blur(2px) saturate(1.5); display:flex; align-items:center; justify-content:center; font-weight:900; color: rgba(255,255,255,0.7); font-size:14px; }
+.mm-data-matrix { background: var(--current-bg); width:100%; height:100%; padding: 8px; font-family:'Space Mono',monospace; color: var(--current-accent); font-size:9px; line-height:1.1; overflow:hidden; word-break:break-all; }
+
+/* ===== Task 18: Right Panel ===== */
+/* Sprint 8: Slot toggle (커버/내용/CTA) */
+.slot-toggle { background:#0A0A0C; border:1px solid #26262c; border-radius:10px; padding:12px 14px; margin-bottom:14px; }
+.slot-toggle-label { font-size:10px; color:#8B8B92; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; font-weight:700; }
+.slot-toggle-buttons { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+.slot-btn { background:#18181c; border:2px solid #26262c; color:#EDEDEF; padding:8px 6px; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:700; font-size:12px; transition: all .15s; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.slot-btn:hover { border-color:#3a3a44; }
+.slot-btn.active { background:rgba(0,245,160,0.1); border-color:#00F5A0; color:#00F5A0; }
+.slot-btn-id { font-family:'Space Mono',monospace; font-size:9px; color:#8B8B92; font-weight:400; letter-spacing:-0.3px; }
+.slot-btn.active .slot-btn-id { color:#00F5A0; opacity:0.8; }
+
+/* Sprint 8: 5-row combo display */
+.combo-display { background:#0A0A0C; border:1px solid #26262c; border-radius:8px; padding:10px 12px; margin-bottom:14px; }
+.combo-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid #18181c; font-size:12px; }
+.combo-row:last-child { border-bottom:none; }
+.combo-label { color:#8B8B92; font-size:10px; text-transform:uppercase; letter-spacing:1px; }
+.combo-value { font-family:'Space Mono',monospace; color:#00F5A0; font-weight:700; }
+.combo-row.slot-row .combo-value { color:#EDEDEF; }
+.combo-row.slot-row.active .combo-label { color:#00F5A0; }
+.combo-row.slot-row.active .combo-value { color:#00F5A0; }
+
+/* Sprint 8: Active slot banner above preset grid */
+.active-slot-banner { background: rgba(0,245,160,0.08); border:1px solid rgba(0,245,160,0.3); border-radius:8px; padding:10px 16px; margin: 0 8px 16px; font-size: 12px; color:#EDEDEF; }
+.active-slot-banner b { color:#00F5A0; }
+.prompt-area { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+.prompt-area label { font-size:11px; color:#8B8B92; font-weight:800; letter-spacing:0.5px; }
+.prompt-area textarea { width:100%; min-height:140px; background:#0A0A0C; color:#EDEDEF; border:1px solid #26262c; border-radius:8px; padding:12px; font-family: 'Pretendard Variable', sans-serif; font-size: 12px; line-height:1.5; resize: vertical; }
+.prompt-area textarea:focus { outline:none; border-color:#00F5A0; }
+.btn-row { display:flex; gap:8px; margin-bottom:18px; }
+.btn { flex:1; padding: 10px 12px; border-radius:8px; border:none; font-weight:800; cursor:pointer; font-size:12px; font-family:inherit; }
+.btn-apply { background: #00F5A0; color: #000; }
+.btn-apply:hover { background: #00d68a; }
+.btn-copy { background: #26262c; color:#EDEDEF; }
+.btn-copy:hover { background: #3a3a44; }
+.btn-copy.copied { background: #00F5A0; color:#000; }
+.preview-mount { background:#0A0A0C; border:1px solid #26262c; border-radius:8px; padding:8px; }
+.preview-mount .pv-lbl { font-size:10px; color:#8B8B92; padding:4px 6px 8px; letter-spacing:1px; text-transform:uppercase; }
+.preview-canvas { aspect-ratio: var(--preview-aspect, 1/1); background: var(--current-bg); color: var(--current-fg); border-radius:6px; padding: 16px; box-sizing: border-box; display:flex; align-items:center; justify-content:center; overflow:hidden; transition: background 200ms ease, color 200ms ease, aspect-ratio 250ms ease; }
+
+/* ===== Sprint 6: Motion Demo System ===== */
+.m-demo-icon { font-size: 9px; opacity: 0.7; margin-right: 2px; }
+.m-item.selected .m-demo-icon { opacity: 1; }
+
+.preview-content { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+/* ===== 비율 토글 (1:1 / 4:5 / 9:16 / 16:9) ===== */
+.aspect-toggle { margin-bottom: 16px; }
+.aspect-buttons { display:grid; grid-template-columns: repeat(4, 1fr); gap:4px; }
+.aspect-btn { background:#0A0A0C; border:1.5px solid #26262c; color:#EDEDEF; padding:8px 4px; border-radius:6px; cursor:pointer; font-family:'Space Mono',monospace; font-weight:700; font-size:11px; transition: all .15s; }
+.aspect-btn:hover { border-color:#3a3a44; }
+.aspect-btn.active { background:rgba(0,245,160,0.1); border-color:#00F5A0; color:#00F5A0; }
+.preview-caption { padding: 12px 16px; background: rgba(218,119,86,0.1); border-top: 1px solid var(--current-line); color: var(--current-fg); font-size: 11px; line-height: 1.5; text-align: center; }
+.preview-caption small { color: var(--current-muted); font-size: 10px; }
+
+/* Output format section — emphasized, sits at TOP of LEFT panel */
+.section-title-top { font-size:13px; font-weight:900; color:#00F5A0; margin: 4px 0 10px; letter-spacing:0.5px; }
+.output-format-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px; }
+.of-card { padding:10px 12px; background:#0A0A0C; border:2px solid #26262c; border-radius:8px; cursor:pointer; transition: all .15s; }
+.of-card:hover { border-color:#3a3a44; transform: translateY(-1px); }
+.of-card.selected { border-color:#00F5A0; background:rgba(0,245,160,0.1); box-shadow: 0 0 0 1px rgba(0,245,160,0.3); }
+.of-id { font-family:'Space Mono',monospace; font-size:9px; color:#00F5A0; font-weight:700; }
+.of-name { font-size:12px; font-weight:800; color:#EDEDEF; margin: 2px 0 4px; }
+.of-desc { font-size:10px; color:#8B8B92; line-height:1.3; }
+.next-hint { font-size:10px; color:#8B8B92; margin: 0 0 8px 4px; padding-left: 8px; border-left: 2px solid #00F5A0; }
+
+/* Demo overlay fix — keyframes for the per-letter JS demos */
+@keyframes demo-letter-drop {
+  from { transform: translateY(-30px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes demo-letter-spring {
+  from { transform: scale(0); }
+  60%  { transform: scale(1.3); }
+  to   { transform: scale(1); }
+}
+
+/* ===== Demo animations: containers ===== */
+.demo-anim { display:inline-flex; align-items:center; justify-content:center; }
+
+/* T5 fade */
+@keyframes demo-fade { from { opacity: 0; } to { opacity: 1; } }
+.demo-anim.demo-fade { animation: demo-fade 1s ease forwards; }
+
+/* T6 slide-up */
+@keyframes demo-slide-up { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.demo-anim.demo-slide-up { animation: demo-slide-up 1s ease forwards; }
+
+/* T7 slide-left */
+@keyframes demo-slide-left { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.demo-anim.demo-slide-left { animation: demo-slide-left 1s ease forwards; }
+
+/* T8 zoom-in */
+@keyframes demo-zoom-in { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.demo-anim.demo-zoom-in { animation: demo-zoom-in 1s ease forwards; }
+
+/* T9 zoom-out */
+@keyframes demo-zoom-out { from { transform: scale(1.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.demo-anim.demo-zoom-out { animation: demo-zoom-out 1s ease forwards; }
+
+/* T10 cut-hard (instant flash) */
+@keyframes demo-cut-hard { 0% { opacity: 0; } 1% { opacity: 1; } 100% { opacity: 1; } }
+.demo-anim.demo-cut-hard { animation: demo-cut-hard 0.6s steps(2) forwards; }
+
+/* T15 scale-pop */
+@keyframes demo-scale-pop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.demo-anim.demo-scale-pop { animation: demo-scale-pop 1s cubic-bezier(.34,1.56,.64,1) forwards; }
+
+/* T16 rotate-in */
+@keyframes demo-rotate-in { from { transform: rotate(-180deg) scale(0.5); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
+.demo-anim.demo-rotate-in { animation: demo-rotate-in 1.2s ease forwards; }
+
+/* T17 blur-focus */
+@keyframes demo-blur-focus { from { filter: blur(20px); opacity: 0; } to { filter: blur(0); opacity: 1; } }
+.demo-anim.demo-blur-focus { animation: demo-blur-focus 1.2s ease forwards; }
+
+/* T19 mask-reveal */
+@keyframes demo-mask-reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.demo-anim.demo-mask-reveal { animation: demo-mask-reveal 1.2s ease forwards; }
+
+/* T20 elastic */
+@keyframes demo-elastic { 0% { transform: scaleX(0); } 40% { transform: scaleX(1.3) scaleY(0.7); } 70% { transform: scaleX(0.85) scaleY(1.1); } 100% { transform: scale(1); } }
+.demo-anim.demo-elastic { animation: demo-elastic 1.5s ease forwards; }
+
+/* T21 glitch-rgb */
+@keyframes demo-glitch-rgb {
+  0%, 100% { text-shadow: none; transform: translate(0); }
+  10% { text-shadow: -3px 0 #ff0080, 3px 0 #00f5a0; transform: translate(-2px,0); }
+  20% { text-shadow: 3px 0 #ff0080, -3px 0 #00f5a0; transform: translate(2px,0); }
+  30% { text-shadow: -2px 0 #00B4FF, 2px 0 #ff0080; transform: translate(0,1px); }
+  50% { text-shadow: -4px 0 #ff0080, 4px 0 #00f5a0; transform: translate(-1px,0); }
+  70% { text-shadow: 2px 0 #00B4FF, -2px 0 #ff0080; transform: translate(0,-1px); }
+}
+.demo-anim.demo-glitch-rgb { animation: demo-glitch-rgb 1.4s steps(20) forwards; }
+
+/* T22 glitch-cut */
+@keyframes demo-glitch-cut {
+  0%, 100% { clip-path: inset(0 0 0 0); transform: translateX(0); }
+  10% { clip-path: inset(20% 0 60% 0); transform: translateX(-6px); }
+  20% { clip-path: inset(60% 0 10% 0); transform: translateX(6px); }
+  30% { clip-path: inset(0 0 0 0); transform: translateX(0); }
+  60% { clip-path: inset(40% 0 30% 0); transform: translateX(-3px); }
+  75% { clip-path: inset(0 0 0 0); transform: translateX(0); }
+}
+.demo-anim.demo-glitch-cut { animation: demo-glitch-cut 1.4s steps(8) forwards; }
+
+/* T25 sparkle */
+@keyframes demo-sparkle {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 0 #fff); }
+  25% { filter: brightness(1.5) drop-shadow(0 0 8px #fff); }
+  50% { filter: brightness(1.1) drop-shadow(0 0 4px var(--current-accent)); }
+  75% { filter: brightness(1.4) drop-shadow(0 0 10px #fff); }
+}
+.demo-anim.demo-sparkle { animation: demo-sparkle 1.5s ease forwards; }
+
+/* T26 light-leak */
+@keyframes demo-light-leak {
+  0% { background: radial-gradient(circle at -20% 50%, rgba(255,150,80,0.6), transparent 40%); opacity: 0; }
+  50% { background: radial-gradient(circle at 50% 50%, rgba(255,150,80,0.8), transparent 50%); opacity: 1; }
+  100% { background: radial-gradient(circle at 120% 50%, rgba(255,150,80,0.4), transparent 40%); opacity: 1; }
+}
+.demo-anim.demo-light-leak { position:relative; }
+.demo-anim.demo-light-leak::after { content:''; position:absolute; inset:0; pointer-events:none; animation: demo-light-leak 1.6s ease forwards; mix-blend-mode: screen; }
+
+/* T27 shake */
+@keyframes demo-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-8px) rotate(-1deg); }
+  20% { transform: translateX(8px) rotate(1deg); }
+  30% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  50% { transform: translateX(-4px) rotate(-0.5deg); }
+  60% { transform: translateX(4px) rotate(0.5deg); }
+  70% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+.demo-anim.demo-shake { animation: demo-shake 1s ease forwards; }
+
+/* T28 morph-shape (border-radius morph) */
+@keyframes demo-morph-shape {
+  0% { border-radius: 50%; transform: scale(0.7); background: var(--current-accent); }
+  50% { border-radius: 0%; transform: scale(1) rotate(45deg); background: var(--current-fg); }
+  100% { border-radius: 8px; transform: scale(1) rotate(0deg); }
+}
+.demo-anim.demo-morph-shape { animation: demo-morph-shape 1.6s ease forwards; }
+
+/* T30 color-wash */
+@keyframes demo-color-wash {
+  0% { filter: hue-rotate(0deg) saturate(1); }
+  50% { filter: hue-rotate(180deg) saturate(2); }
+  100% { filter: hue-rotate(360deg) saturate(1); }
+}
+.demo-anim.demo-color-wash { animation: demo-color-wash 1.6s ease forwards; }
+
+/* T31 noise-grain */
+@keyframes demo-noise-grain {
+  0%, 100% { filter: contrast(1.1) brightness(1); }
+  20% { filter: contrast(1.3) brightness(1.05); }
+  40% { filter: contrast(1.1) brightness(0.95); }
+  60% { filter: contrast(1.4) brightness(1.1); }
+  80% { filter: contrast(1.2) brightness(0.9); }
+}
+.demo-anim.demo-noise-grain { position:relative; animation: demo-noise-grain 1.4s steps(14) forwards; }
+.demo-anim.demo-noise-grain::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image: repeating-radial-gradient(circle at 0 0, rgba(255,255,255,0.04) 0, rgba(0,0,0,0.04) 1px, transparent 2px);
+  mix-blend-mode: overlay; opacity: 0.6;
+}
+
+/* T32 crt-scanline */
+@keyframes demo-crt-scanline {
+  0% { background-position: 0 0; opacity: 0; }
+  10% { opacity: 1; }
+  100% { background-position: 0 100px; opacity: 1; }
+}
+.demo-anim.demo-crt-scanline { position:relative; }
+.demo-anim.demo-crt-scanline::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px);
+  animation: demo-crt-scanline 1.5s linear forwards;
+}
+
+/* T34 lens-flare */
+@keyframes demo-lens-flare {
+  0% { background-position: -100% 50%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { background-position: 200% 50%; opacity: 0; }
+}
+.demo-anim.demo-lens-flare { position:relative; }
+.demo-anim.demo-lens-flare::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,200,0.8), transparent 30%);
+  background-size: 60% 100%; background-repeat:no-repeat;
+  animation: demo-lens-flare 1.6s ease forwards; mix-blend-mode: screen;
+}
+
+/* T35 ripple */
+@keyframes demo-ripple {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.demo-anim.demo-ripple { position:relative; animation: demo-ripple 1.4s ease forwards; }
+.demo-anim.demo-ripple::after {
+  content:''; position:absolute; inset:0; border-radius:50%; pointer-events:none;
+  border: 2px solid var(--current-accent); opacity: 0;
+  animation: demo-ripple-circle 1.4s ease forwards;
+}
+@keyframes demo-ripple-circle {
+  0% { transform: scale(0.4); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* T37 camera-pan */
+@keyframes demo-camera-pan {
+  0% { transform: translateX(60px); }
+  100% { transform: translateX(0); }
+}
+.demo-anim.demo-camera-pan { animation: demo-camera-pan 1.4s ease forwards; }
+
+/* T38 camera-dolly */
+@keyframes demo-camera-dolly {
+  0% { transform: scale(0.7) translateZ(0); }
+  100% { transform: scale(1) translateZ(0); }
+}
+.demo-anim.demo-camera-dolly { animation: demo-camera-dolly 1.6s cubic-bezier(.4,0,.2,1) forwards; }
+
+/* T41 depth-zoom */
+@keyframes demo-depth-zoom {
+  0% { transform: scale(0.6); filter: blur(8px); }
+  60% { transform: scale(1.1); filter: blur(0); }
+  100% { transform: scale(1); filter: blur(0); }
+}
+.demo-anim.demo-depth-zoom { animation: demo-depth-zoom 1.4s ease forwards; }
+
+/* T42 flip-3d */
+@keyframes demo-flip-3d {
+  0% { transform: perspective(600px) rotateY(0deg); }
+  50% { transform: perspective(600px) rotateY(180deg); }
+  100% { transform: perspective(600px) rotateY(360deg); }
+}
+.demo-anim.demo-flip-3d { animation: demo-flip-3d 1.6s ease forwards; }
+
+/* T43 fold-paper */
+@keyframes demo-fold-paper {
+  0% { transform: perspective(800px) rotateX(-90deg); transform-origin: top; opacity: 0; }
+  100% { transform: perspective(800px) rotateX(0deg); transform-origin: top; opacity: 1; }
+}
+.demo-anim.demo-fold-paper { animation: demo-fold-paper 1.4s ease forwards; }
+
+/* T45 split-reveal */
+@keyframes demo-split-reveal {
+  0% { clip-path: inset(0 50% 0 50%); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+.demo-anim.demo-split-reveal { animation: demo-split-reveal 1.2s cubic-bezier(.6,0,.2,1) forwards; }
+
+/* T46 whip-pan */
+@keyframes demo-whip-pan {
+  0% { transform: translateX(120px); filter: blur(12px); opacity: 0; }
+  60% { transform: translateX(-10px); filter: blur(2px); opacity: 1; }
+  100% { transform: translateX(0); filter: blur(0); opacity: 1; }
+}
+.demo-anim.demo-whip-pan { animation: demo-whip-pan 0.9s cubic-bezier(.5,0,.1,1) forwards; }
+
+/* T48 ken-burns */
+@keyframes demo-ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.18) translate(-4%, -2%); }
+}
+.demo-anim.demo-ken-burns { animation: demo-ken-burns 1.8s ease forwards; }
+
+/* T49 stop-motion */
+@keyframes demo-stop-motion {
+  0% { transform: rotate(-3deg) translateY(0); opacity: 0; }
+  20% { transform: rotate(2deg) translateY(-2px); opacity: 1; }
+  40% { transform: rotate(-2deg) translateY(1px); }
+  60% { transform: rotate(2deg) translateY(-1px); }
+  80% { transform: rotate(-1deg) translateY(0); }
+  100% { transform: rotate(0deg) translateY(0); opacity: 1; }
+}
+.demo-anim.demo-stop-motion { animation: demo-stop-motion 1.4s steps(7) forwards; }
+
+/* T51 chromatic */
+@keyframes demo-chromatic {
+  0% { text-shadow: -4px 0 #ff0080, 4px 0 #00B4FF; filter: blur(0); }
+  100% { text-shadow: -2px 0 #ff0080, 2px 0 #00B4FF; filter: blur(0); }
+}
+.demo-anim.demo-chromatic { animation: demo-chromatic 1.4s ease forwards; }
+
+/* T52 god-rays */
+@keyframes demo-god-rays {
+  0% { background-position: 50% -100%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { background-position: 50% 200%; opacity: 0.3; }
+}
+.demo-anim.demo-god-rays { position:relative; }
+.demo-anim.demo-god-rays::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: linear-gradient(180deg, rgba(255,235,150,0.5) 0%, transparent 60%);
+  background-size: 100% 200%;
+  animation: demo-god-rays 1.8s ease forwards; mix-blend-mode: screen;
+}
+
+/* T53 light-sweep */
+@keyframes demo-light-sweep {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+.demo-anim.demo-light-sweep { position:relative; overflow:hidden; }
+.demo-anim.demo-light-sweep::after {
+  content:''; position:absolute; top:0; bottom:0; width:60%; pointer-events:none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: demo-light-sweep 1.4s ease forwards; mix-blend-mode: screen;
+}
+
+/* T54 film-burn */
+@keyframes demo-film-burn {
+  0% { background: rgba(255,255,255,0); }
+  20% { background: rgba(255,180,80,0.9); }
+  40% { background: rgba(255,80,40,0.7); }
+  100% { background: rgba(255,255,255,0); }
+}
+.demo-anim.demo-film-burn { position:relative; }
+.demo-anim.demo-film-burn::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  animation: demo-film-burn 1.4s ease forwards; mix-blend-mode: screen;
+}
+
+/* T55 vhs */
+@keyframes demo-vhs {
+  0%, 100% { transform: translateY(0); filter: hue-rotate(0deg) saturate(1.5); }
+  25% { transform: translateY(-2px) skewX(-2deg); filter: hue-rotate(8deg) saturate(2); }
+  50% { transform: translateY(1px) scaleY(1.02); filter: hue-rotate(-8deg) saturate(1.5); }
+  75% { transform: translateY(-1px) skewX(1deg); filter: hue-rotate(12deg) saturate(1.8); }
+}
+.demo-anim.demo-vhs { animation: demo-vhs 1.4s steps(12) forwards; }
+
+/* T56 zoom-punch */
+@keyframes demo-zoom-punch {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.5); filter: blur(6px); }
+  40% { transform: scale(0.95); filter: blur(0); }
+  100% { transform: scale(1); }
+}
+.demo-anim.demo-zoom-punch { animation: demo-zoom-punch 1s cubic-bezier(.5,0,.1,1) forwards; }
+
+/* T58 motion-blur */
+@keyframes demo-motion-blur {
+  0% { transform: translateX(-80px); filter: blur(12px); opacity: 0; }
+  60% { transform: translateX(10px); filter: blur(4px); opacity: 1; }
+  100% { transform: translateX(0); filter: blur(0); opacity: 1; }
+}
+.demo-anim.demo-motion-blur { animation: demo-motion-blur 1.2s ease forwards; }
+
+/* T59 rgb-trail */
+@keyframes demo-rgb-trail {
+  0% { text-shadow: -8px 0 #ff0080, 8px 0 #00B4FF, 0 0 #00f5a0; transform: translateX(-12px); opacity: 0; }
+  60% { text-shadow: -4px 0 rgba(255,0,128,0.6), 4px 0 rgba(0,180,255,0.6), 0 0 #00f5a0; opacity: 1; }
+  100% { text-shadow: 0 0 #fff; transform: translateX(0); opacity: 1; }
+}
+.demo-anim.demo-rgb-trail { animation: demo-rgb-trail 1.4s ease forwards; }
+
+/* T60 hologram-flicker */
+@keyframes demo-hologram-flicker {
+  0%   { opacity: 0.2; filter: hue-rotate(0deg); }
+  10%  { opacity: 1;   filter: hue-rotate(20deg); }
+  20%  { opacity: 0.4; }
+  30%  { opacity: 1;   filter: hue-rotate(-20deg); }
+  40%  { opacity: 0.6; }
+  50%  { opacity: 1; }
+  60%  { opacity: 0.3; }
+  70%  { opacity: 1;   filter: hue-rotate(40deg); }
+  85%  { opacity: 0.7; }
+  100% { opacity: 1;   filter: hue-rotate(0deg); }
+}
+.demo-anim.demo-hologram-flicker { animation: demo-hologram-flicker 1.6s steps(20) forwards; }
+
+/* JS-driven demo helpers */
+.demo-typewriter-cursor::after { content:'|'; color: var(--current-accent); animation: demo-cursor-blink 0.8s steps(2) infinite; margin-left:2px; }
+@keyframes demo-cursor-blink { 0%,49% { opacity:1; } 50%,100% { opacity:0; } }
+
+.demo-letter-drop { display:inline-block; }
+.demo-letter-drop > span { display:inline-block; opacity:0; transform: translateY(-30px); animation: demo-letter-drop-fall 0.5s ease forwards; }
+@keyframes demo-letter-drop-fall { to { opacity:1; transform: translateY(0); } }
+
+.demo-letter-spring { display:inline-block; }
+.demo-letter-spring > span { display:inline-block; opacity:0; transform: translateY(20px) scale(0.5); animation: demo-letter-spring-pop 0.6s cubic-bezier(.34,1.56,.64,1) forwards; }
+@keyframes demo-letter-spring-pop { to { opacity:1; transform: translateY(0) scale(1); } }
+
+.demo-word-step { display:inline-block; opacity:0; animation: demo-word-fade 0.4s ease forwards; }
+@keyframes demo-word-fade { to { opacity:1; } }
+
+/* ===== Task 22: Responsive ===== */
+@media (max-width: 1280px) {
+  #app-main { grid-template-columns: 1fr; }
+  #panel-left, #panel-right { position: static; }
+  .palette-chips { grid-template-columns: repeat(4, 1fr); }
+  .motion-list { max-height: 280px; }
+  .preset-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+@media (max-width: 768px) {
+  .palette-chips { grid-template-columns: repeat(3, 1fr); }
+  .preset-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  #panel-right .prompt-area textarea { min-height: 100px; }
+  .h-title { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="app-header"></header>
+  <main id="app-main">
+    <aside id="panel-left"></aside>
+    <section id="panel-center"></section>
+    <aside id="panel-right"></aside>
+  </main>
+  <section style="padding: 0 32px 40px; max-width:1400px; margin:0 auto;">
+    <div style="background:#18181c;border:1px solid #26262c;border-radius:14px;padding:20px 24px">
+      <div style="font-size:11px;color:#00F5A0;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">📚 참조 링크</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12px">
+        <a href="MENU.md" style="color:#DA7756;text-decoration:none">→ MENU.md (전체 카탈로그)</a>
+        <a href="SKILL.md" style="color:#DA7756;text-decoration:none">→ SKILL.md (스킬 메뉴얼)</a>
+        <a href="compare-3d.html" style="color:#DA7756;text-decoration:none">→ compare-3d.html (PIL vs WebGL 비교)</a>
+        <a href="menu-backup-20260430.html" style="color:#8B8B92;text-decoration:none">→ menu-backup-20260430.html (v2.2 원본)</a>
+      </div>
+    </div>
+  </section>
+  <footer style="padding:24px 32px 40px;text-align:center;color:#3a3a44;font-size:11px;border-top:1px solid #18181c;margin-top:40px">
+    © 2026 COMMME · Built with Claude Code · v3 · 20×50×60 = 60,000 조합
+  </footer>
+</div>
+<script id="app-data">
+const PALETTES = [
+  { id:'P-1',  name:'claude',   colors:['#141414','#DA7756','#F4E5D9'],     mood:'Warm Editorial · Claude 브랜드' },
+  { id:'P-2',  name:'mono',     colors:['#0A0A0A','#FAFAFA','#E63C28'],     mood:'Editorial Monochrome + 레드 포인트' },
+  { id:'P-3',  name:'neon',     colors:['#08080C','#00F5A0','#FF0080','#00B4FF'], mood:'Cyber Neon' },
+  { id:'P-4',  name:'sunset',   colors:['#F07167','#FED9B7','#0081A7'],     mood:'Coral Sunset' },
+  { id:'P-5',  name:'nature',   colors:['#2D5F3F','#E8F0E5','#F4A261'],     mood:'Forest Terra' },
+  { id:'P-6',  name:'ocean',    colors:['#03045E','#0077B6','#90E0EF'],     mood:'Ocean Blue' },
+  { id:'P-7',  name:'pastel',   colors:['#FFD6BA','#FFF0E6','#8B5A3C'],     mood:'Soft Peach' },
+  { id:'P-8',  name:'luxury',   colors:['#1A1A1A','#D4AF37','#F5F5DC'],     mood:'Gold Charcoal' },
+  { id:'P-9',  name:'nordic',   colors:['#1E3A5F','#BFDBF7','#F9F9F9'],     mood:'Scandinavian Blue' },
+  { id:'P-10', name:'matcha',   colors:['#3E5F44','#A8C686','#F5F1E8'],     mood:'Green Tea' },
+  { id:'P-11', name:'sakura',   colors:['#FFB7C5','#FDF2F5','#8B4F5C'],     mood:'Cherry Blossom' },
+  { id:'P-12', name:'midnight', colors:['#0B0C2A','#6B46C1','#E0AAFF'],     mood:'Deep Purple' },
+  { id:'P-13', name:'sand',     colors:['#D9B382','#F5EBDC','#6B4F3A'],     mood:'Desert Sand' },
+  { id:'P-14', name:'ember',    colors:['#1A0F0A','#FF6B35','#FFD166'],     mood:'Fire Ember' },
+  { id:'P-15', name:'mint',     colors:['#0D3B3B','#7EDDC4','#F0FFFB'],     mood:'Fresh Mint' },
+  { id:'P-16', name:'wine',     colors:['#2D0A0A','#800020','#F4E4C1'],     mood:'Burgundy' },
+  { id:'P-17', name:'cyber',    colors:['#000000','#FF006E','#FFBE0B'],     mood:'Hot Pink + Black (Bold)' },
+  { id:'P-18', name:'forest',   colors:['#14260C','#52734D','#D6E3B6'],     mood:'Deep Forest' },
+  { id:'P-19', name:'vapor',    colors:['#FF71CE','#01CDFE','#05FFA1'],     mood:'Vaporwave 80s' },
+  { id:'P-20', name:'minimal',  colors:['#000000','#FFFFFF','#888888'],     mood:'Pure B&W' }
+];
+
+const PRESETS = [
+  // Classic (F-1 ~ F-10)
+  { id:'F-1',  name:'hero-bold',       category:'Classic',    desc:'거대 히어로 타이포 (150~170pt Black)' },
+  { id:'F-2',  name:'list-card',       category:'Classic',    desc:'리스트 카드 3~6개, 번호+아이템' },
+  { id:'F-3',  name:'quote-center',    category:'Classic',    desc:'중앙 인용구 + 큰 따옴표' },
+  { id:'F-4',  name:'stat-focus',      category:'Classic',    desc:'거대 숫자 (200~240pt)' },
+  { id:'F-5',  name:'photo-frame',     category:'Classic',    desc:'상단 사진 600px + 하단 텍스트' },
+  { id:'F-6',  name:'editorial',       category:'Classic',    desc:'넓은 여백 + 얇은 라인 + 매거진' },
+  { id:'F-7',  name:'grid-poster',     category:'Classic',    desc:'2×2 또는 3×3 그리드 포스터' },
+  { id:'F-8',  name:'split-screen',    category:'Classic',    desc:'좌우 반반 대비 레이아웃' },
+  { id:'F-9',  name:'headline-news',   category:'Classic',    desc:'신문 1면 헤드라인 포맷' },
+  { id:'F-10', name:'checklist',       category:'Classic',    desc:'☑ 체크박스 항목 나열' },
+  // Trendy (F-11 ~ F-25)
+  { id:'F-11', name:'neo-brutalism',   category:'Trendy',     desc:'검정 테두리 + 하드 오프셋 섀도우' },
+  { id:'F-12', name:'risograph',       category:'Trendy',     desc:'2도 인쇄 + 노이즈 + 어긋난 레지스트레이션' },
+  { id:'F-13', name:'glass-morphism',  category:'Trendy',     desc:'반투명 유리 + 그라디언트' },
+  { id:'F-14', name:'y2k-chrome',      category:'Trendy',     desc:'크롬 그라디언트 + 홀로그램' },
+  { id:'F-15', name:'bauhaus',         category:'Trendy',     desc:'3원색 기하학 (원/삼각/사각)' },
+  { id:'F-16', name:'claymorphism',    category:'Trendy',     desc:'말랑한 점토 3D 라운드' },
+  { id:'F-17', name:'memphis',         category:'Trendy',     desc:'멤피스 · 지그재그/도트/구불구불' },
+  { id:'F-18', name:'vaporwave',       category:'Trendy',     desc:'80s 핑크+시안 그리드' },
+  { id:'F-19', name:'sticker-pop',     category:'Trendy',     desc:'팝아트 스티커 · 흰 테두리' },
+  { id:'F-20', name:'tape-label',      category:'Trendy',     desc:'테이프/라벨 찢어진 질감' },
+  { id:'F-21', name:'newspaper',       category:'Trendy',     desc:'옛날 신문 · 세리프 + 격자' },
+  { id:'F-22', name:'retro-tv',        category:'Trendy',     desc:'CRT TV 주사선 + 둥근 모서리' },
+  { id:'F-23', name:'zine',            category:'Trendy',     desc:'인디 진 · 콜라주 + 손글씨' },
+  { id:'F-24', name:'polaroid',        category:'Trendy',     desc:'폴라로이드 흰 프레임' },
+  { id:'F-25', name:'marker-sketch',   category:'Trendy',     desc:'마커펜 스케치 스타일' },
+  // Typography (F-26 ~ F-33)
+  { id:'F-26', name:'faux-3d-text',    category:'Typography', desc:'5~8겹 오프셋 3D 입체' },
+  { id:'F-27', name:'kinetic-typo',    category:'Typography', desc:'글자 하나씩 등장 (T2~T4 전용)' },
+  { id:'F-28', name:'typewriter',      category:'Typography', desc:'고정폭 + 커서 깜빡임' },
+  { id:'F-29', name:'outline-text',    category:'Typography', desc:'속이 빈 아웃라인 텍스트' },
+  { id:'F-30', name:'graffiti',        category:'Typography', desc:'그래피티 스프레이 스타일' },
+  { id:'F-31', name:'serif-mono',      category:'Typography', desc:'세리프 + 모노스페이스 혼용' },
+  { id:'F-32', name:'stamp-text',      category:'Typography', desc:'고무 스탬프 · 잉크 번짐' },
+  { id:'F-33', name:'ransom-note',     category:'Typography', desc:'신문 오려붙인 협박편지' },
+  // Data (F-34 ~ F-42)
+  { id:'F-34', name:'infographic',     category:'Data',       desc:'아이콘 + 수치 + 설명 조합' },
+  { id:'F-35', name:'timeline',        category:'Data',       desc:'가로/세로 타임라인' },
+  { id:'F-36', name:'comparison-table',category:'Data',       desc:'비교표 (A vs B)' },
+  { id:'F-37', name:'bar-chart',       category:'Data',       desc:'막대 차트 강조' },
+  { id:'F-38', name:'donut-chart',     category:'Data',       desc:'도넛 차트 + 중앙 숫자' },
+  { id:'F-39', name:'flow-diagram',    category:'Data',       desc:'플로우차트 · 화살표' },
+  { id:'F-40', name:'mind-map',        category:'Data',       desc:'마인드맵 가지' },
+  { id:'F-41', name:'ranking-list',    category:'Data',       desc:'TOP N 순위 리스트' },
+  { id:'F-42', name:'before-after',    category:'Data',       desc:'전/후 비교 슬라이더' },
+  // Novelty (F-43 ~ F-50)
+  { id:'F-43', name:'holographic',     category:'Novelty',    desc:'이리데슨트 무지개 홀로그램' },
+  { id:'F-44', name:'liquid-metal',    category:'Novelty',    desc:'액체 크롬 블롭' },
+  { id:'F-45', name:'aurora',          category:'Novelty',    desc:'북극광 그라디언트 플로우' },
+  { id:'F-46', name:'neon-sign',       category:'Novelty',    desc:'네온 튜브 글로우 사인' },
+  { id:'F-47', name:'crystal-facet',   category:'Novelty',    desc:'결정 다각형 컷' },
+  { id:'F-48', name:'shader-mesh',     category:'Novelty',    desc:'생성형 그라디언트 메시' },
+  { id:'F-49', name:'ai-dream',        category:'Novelty',    desc:'MJ/SD 스타일 몽환 룩' },
+  { id:'F-50', name:'data-matrix',     category:'Novelty',    desc:'매트릭스 디지털 레인' }
+];
+
+const MOTIONS = [
+  // Basic Format (M-1 ~ M-10)
+  { id:'M-1',  name:'static-png',         category:'Basic',     desc:'정적 PNG 8장 (기본)' },
+  { id:'M-2',  name:'animated-gif',       category:'Basic',     desc:'8장 GIF 순환' },
+  { id:'M-3',  name:'reels-mp4',          category:'Basic',     desc:'9:16 MP4 슬라이드' },
+  { id:'M-4',  name:'remotion',           category:'Basic',     desc:'React Remotion 고급 영상' },
+  { id:'M-5',  name:'fade',               category:'Basic',     desc:'페이드 인/아웃' },
+  { id:'M-6',  name:'slide-up',           category:'Basic',     desc:'아래→위 슬라이드' },
+  { id:'M-7',  name:'slide-left',         category:'Basic',     desc:'오른쪽→왼쪽 슬라이드' },
+  { id:'M-8',  name:'zoom-in',            category:'Basic',     desc:'중앙에서 확대' },
+  { id:'M-9',  name:'zoom-out',           category:'Basic',     desc:'크게→작게 축소' },
+  { id:'M-10', name:'cut-hard',           category:'Basic',     desc:'하드컷 (효과 없음)' },
+  // Kinetic (M-11 ~ M-20)
+  { id:'M-11', name:'typewriter-cursor',  category:'Kinetic',   desc:'타자기 + 커서 깜빡임' },
+  { id:'M-12', name:'word-by-word',       category:'Kinetic',   desc:'단어 단위 순차 등장' },
+  { id:'M-13', name:'letter-drop',        category:'Kinetic',   desc:'글자 하나씩 위에서 툭' },
+  { id:'M-14', name:'letter-spring',      category:'Kinetic',   desc:'글자 바운스 스프링' },
+  { id:'M-15', name:'scale-pop',          category:'Kinetic',   desc:'팡 하고 커짐' },
+  { id:'M-16', name:'rotate-in',          category:'Kinetic',   desc:'회전하며 등장' },
+  { id:'M-17', name:'blur-focus',         category:'Kinetic',   desc:'블러 → 선명' },
+  { id:'M-18', name:'scramble',           category:'Kinetic',   desc:'랜덤 문자 → 정답' },
+  { id:'M-19', name:'mask-reveal',        category:'Kinetic',   desc:'마스크로 가렸다 열림' },
+  { id:'M-20', name:'elastic-stretch',    category:'Kinetic',   desc:'고무줄처럼 늘어남' },
+  // Effect (M-21 ~ M-35)
+  { id:'M-21', name:'glitch-rgb',         category:'Effect',    desc:'RGB 분리 + 픽셀 시프트' },
+  { id:'M-22', name:'glitch-cut',         category:'Effect',    desc:'랜덤 가로 스트라이프 끊김' },
+  { id:'M-23', name:'particle-burst',     category:'Effect',    desc:'파티클 방사형 폭발' },
+  { id:'M-24', name:'confetti',           category:'Effect',    desc:'색종이 뿌리기' },
+  { id:'M-25', name:'sparkle',            category:'Effect',    desc:'반짝이 스파클' },
+  { id:'M-26', name:'light-leak',         category:'Effect',    desc:'빛 번짐 오버레이' },
+  { id:'M-27', name:'shake',              category:'Effect',    desc:'흔들림' },
+  { id:'M-28', name:'morph-shape',        category:'Effect',    desc:'원 → 사각형 변형' },
+  { id:'M-29', name:'morph-number',       category:'Effect',    desc:'숫자 카운트업' },
+  { id:'M-30', name:'color-wash',         category:'Effect',    desc:'배경 색 뒤바뀜' },
+  { id:'M-31', name:'noise-grain',        category:'Effect',    desc:'필름 그레인 노이즈' },
+  { id:'M-32', name:'crt-scanline',       category:'Effect',    desc:'CRT 주사선' },
+  { id:'M-33', name:'smoke',              category:'Effect',    desc:'연기 페이드' },
+  { id:'M-34', name:'lens-flare',         category:'Effect',    desc:'렌즈 플레어' },
+  { id:'M-35', name:'ripple',             category:'Effect',    desc:'물결 퍼짐' },
+  // Scene (M-36 ~ M-50)
+  { id:'M-36', name:'parallax-3layer',    category:'Scene',     desc:'배경/중경/전경 시차' },
+  { id:'M-37', name:'camera-pan',         category:'Scene',     desc:'카메라 좌우 이동' },
+  { id:'M-38', name:'camera-dolly',       category:'Scene',     desc:'앞으로 전진' },
+  { id:'M-39', name:'camera-orbit',       category:'Scene',     desc:'피사체 주위 원형' },
+  { id:'M-40', name:'iso-rotate',         category:'Scene',     desc:'아이소메트릭 회전' },
+  { id:'M-41', name:'depth-zoom',         category:'Scene',     desc:'깊이감 있는 줌' },
+  { id:'M-42', name:'flip-3d',            category:'Scene',     desc:'카드 뒤집기' },
+  { id:'M-43', name:'fold-paper',         category:'Scene',     desc:'종이 접힘' },
+  { id:'M-44', name:'cube-rotate',        category:'Scene',     desc:'큐브 6면 회전' },
+  { id:'M-45', name:'split-reveal',       category:'Scene',     desc:'좌우 갈라지며 공개' },
+  { id:'M-46', name:'whip-pan',           category:'Scene',     desc:'휘리릭 빠른 팬' },
+  { id:'M-47', name:'match-cut',          category:'Scene',     desc:'형태 매치 컷' },
+  { id:'M-48', name:'ken-burns',          category:'Scene',     desc:'사진 줌+팬 (Ken Burns)' },
+  { id:'M-49', name:'stop-motion',        category:'Scene',     desc:'스톱모션 툭툭' },
+  { id:'M-50', name:'cinemagraph',        category:'Scene',     desc:'일부만 움직이는 사진' },
+  // Advanced (M-51 ~ M-60)
+  { id:'M-51', name:'chromatic-aberration', category:'Advanced',desc:'색수차 정적 분리' },
+  { id:'M-52', name:'god-rays',           category:'Advanced',  desc:'빛줄기 발산' },
+  { id:'M-53', name:'light-sweep',        category:'Advanced',  desc:'대각선 빛 스윕' },
+  { id:'M-54', name:'film-burn',          category:'Advanced',  desc:'필름 번인 플래시' },
+  { id:'M-55', name:'vhs-tracking',       category:'Advanced',  desc:'VHS 트래킹 왜곡' },
+  { id:'M-56', name:'zoom-punch',         category:'Advanced',  desc:'타이밍 펀치 줌' },
+  { id:'M-57', name:'liquid-morph',       category:'Advanced',  desc:'액체 변형' },
+  { id:'M-58', name:'motion-blur',        category:'Advanced',  desc:'피사체 모션블러 궤적' },
+  { id:'M-59', name:'rgb-trail',          category:'Advanced',  desc:'RGB 채널 잔상' },
+  { id:'M-60', name:'hologram-flicker',   category:'Advanced',  desc:'홀로그램 깜빡임' }
+];
+
+const MOTION_DEMOS = {
+  // ===== Output formats (M-1 ~ M-4) — labels only, no animation =====
+  'M-1':  { type:'label', output:'정적 PNG 8장 (인스타 캐러셀 기본)' },
+  'M-2':  { type:'label', output:'8장 → GIF 순환 (3초 반복)' },
+  'M-3':  { type:'label', output:'9:16 MP4 (Reels/Shorts)' },
+  'M-4':  { type:'label', output:'React Remotion 영상 (.tsx 컴포넌트 생성)' },
+
+  // ===== Basic transitions (M-5 ~ M-10) — pure CSS =====
+  'M-5':  { type:'animation', anim:'demo-fade'      },
+  'M-6':  { type:'animation', anim:'demo-slide-up'  },
+  'M-7':  { type:'animation', anim:'demo-slide-left'},
+  'M-8':  { type:'animation', anim:'demo-zoom-in'   },
+  'M-9':  { type:'animation', anim:'demo-zoom-out'  },
+  'M-10': { type:'animation', anim:'demo-cut-hard'  },
+
+  // ===== Kinetic typography (M-11 ~ M-20) =====
+  'M-11': { type:'js', fn:'demoTypewriter'   },
+  'M-12': { type:'js', fn:'demoWordByWord'   },
+  'M-13': { type:'js', fn:'demoLetterDrop'   },
+  'M-14': { type:'js', fn:'demoLetterSpring' },
+  'M-15': { type:'animation', anim:'demo-scale-pop'    },
+  'M-16': { type:'animation', anim:'demo-rotate-in'    },
+  'M-17': { type:'animation', anim:'demo-blur-focus'   },
+  'M-18': { type:'js', fn:'demoScramble'    },
+  'M-19': { type:'animation', anim:'demo-mask-reveal'  },
+  'M-20': { type:'animation', anim:'demo-elastic'      },
+
+  // ===== Effects (M-21 ~ M-35) =====
+  'M-21': { type:'animation', anim:'demo-glitch-rgb'   },
+  'M-22': { type:'animation', anim:'demo-glitch-cut'   },
+  'M-23': { type:'none' },
+  'M-24': { type:'none' },
+  'M-25': { type:'animation', anim:'demo-sparkle'      },
+  'M-26': { type:'animation', anim:'demo-light-leak'   },
+  'M-27': { type:'animation', anim:'demo-shake'        },
+  'M-28': { type:'animation', anim:'demo-morph-shape'  },
+  'M-29': { type:'js', fn:'demoMorphNumber' },
+  'M-30': { type:'animation', anim:'demo-color-wash'   },
+  'M-31': { type:'animation', anim:'demo-noise-grain'  },
+  'M-32': { type:'animation', anim:'demo-crt-scanline' },
+  'M-33': { type:'none' },
+  'M-34': { type:'animation', anim:'demo-lens-flare'   },
+  'M-35': { type:'animation', anim:'demo-ripple'       },
+
+  // ===== Scene (M-36 ~ M-50) =====
+  'M-36': { type:'none' },
+  'M-37': { type:'animation', anim:'demo-camera-pan'   },
+  'M-38': { type:'animation', anim:'demo-camera-dolly' },
+  'M-39': { type:'none' },
+  'M-40': { type:'none' },
+  'M-41': { type:'animation', anim:'demo-depth-zoom'   },
+  'M-42': { type:'animation', anim:'demo-flip-3d'      },
+  'M-43': { type:'animation', anim:'demo-fold-paper'   },
+  'M-44': { type:'none' },
+  'M-45': { type:'animation', anim:'demo-split-reveal' },
+  'M-46': { type:'animation', anim:'demo-whip-pan'     },
+  'M-47': { type:'none' },
+  'M-48': { type:'animation', anim:'demo-ken-burns'    },
+  'M-49': { type:'animation', anim:'demo-stop-motion'  },
+  'M-50': { type:'none' },
+
+  // ===== Advanced (M-51 ~ M-60) =====
+  'M-51': { type:'animation', anim:'demo-chromatic'    },
+  'M-52': { type:'animation', anim:'demo-god-rays'     },
+  'M-53': { type:'animation', anim:'demo-light-sweep'  },
+  'M-54': { type:'animation', anim:'demo-film-burn'    },
+  'M-55': { type:'animation', anim:'demo-vhs'          },
+  'M-56': { type:'animation', anim:'demo-zoom-punch'   },
+  'M-57': { type:'none' },
+  'M-58': { type:'animation', anim:'demo-motion-blur'  },
+  'M-59': { type:'animation', anim:'demo-rgb-trail'    },
+  'M-60': { type:'animation', anim:'demo-hologram-flicker' }
+};
+
+const PAIRINGS = {
+  // Classic (F-1 ~ F-10)
+  'F-1':['M-11','M-21','M-56'], 'F-2':['M-5','M-6','M-12'],   'F-3':['M-17','M-11','M-53'], 'F-4':['M-29','M-23','M-56'],
+  'F-5':['M-48','M-36','M-58'], 'F-6':['M-5','M-53','M-46'],  'F-7':['M-45','M-8','M-5'],   'F-8':['M-45','M-7','M-46'],
+  'F-9':['M-21','M-11','M-54'], 'F-10':['M-15','M-13','M-25'],
+  // Trendy (F-11 ~ F-25)
+  'F-11':['M-21','M-27','M-22'], 'F-12':['M-31','M-5','M-55'],  'F-13':['M-30','M-35','M-57'], 'F-14':['M-32','M-25','M-60'],
+  'F-15':['M-28','M-15','M-16'], 'F-16':['M-14','M-15','M-20'], 'F-17':['M-24','M-27','M-25'], 'F-18':['M-32','M-59','M-55'],
+  'F-19':['M-15','M-27','M-24'], 'F-20':['M-16','M-49','M-13'], 'F-21':['M-31','M-10','M-54'], 'F-22':['M-32','M-55','M-60'],
+  'F-23':['M-49','M-31','M-33'], 'F-24':['M-48','M-49','M-26'], 'F-25':['M-11','M-31','M-18'],
+  // Typography (F-26 ~ F-33)
+  'F-26':['M-13','M-14','M-20'], 'F-27':['M-12','M-13','M-15'], 'F-28':['M-11','M-18','M-5'],  'F-29':['M-19','M-17','M-11'],
+  'F-30':['M-31','M-33','M-54'], 'F-31':['M-11','M-5','M-17'],  'F-32':['M-10','M-15','M-27'], 'F-33':['M-49','M-27','M-16'],
+  // Data (F-34 ~ F-42)
+  'F-34':['M-5','M-15','M-12'],  'F-35':['M-6','M-12','M-37'],  'F-36':['M-45','M-8','M-50'],  'F-37':['M-6','M-29','M-56'],
+  'F-38':['M-29','M-16','M-15'], 'F-39':['M-12','M-5','M-6'],   'F-40':['M-15','M-12','M-5'],  'F-41':['M-13','M-6','M-29'],
+  'F-42':['M-45','M-30','M-50'],
+  // Novelty (F-43 ~ F-50)
+  'F-43':['M-60','M-30','M-53'], 'F-44':['M-57','M-30','M-35'], 'F-45':['M-30','M-35','M-52'], 'F-46':['M-60','M-25','M-34'],
+  'F-47':['M-28','M-40','M-16'], 'F-48':['M-30','M-35','M-57'], 'F-49':['M-17','M-33','M-30'], 'F-50':['M-11','M-21','M-32']
+};
+</script>
+<script id="app-logic">
+const state = {
+  output:  'M-1',           // 출력 포맷 (M-1~M-4 only)
+  aspect:  '1:1',           // 결과물 비율 (1:1 / 4:5 / 9:16 / 16:9)
+  palette: 'P-1',           // 팔레트 (P-1~P-20)
+  cover:   { preset: 'F-1',  motion: 'M-11' },
+  content: { preset: 'F-3',  motion: 'M-5'  },
+  cta:     { preset: 'F-12', motion: 'M-15' },
+  activeSlot: 'cover',      // 'cover' | 'content' | 'cta' — which slot accepts preset/motion clicks
+  topic:   '',
+  applied: null
+};
+
+const SLOTS = ['cover', 'content', 'cta'];
+const SLOT_LABELS = { cover: '커버', content: '내용', cta: 'CTA' };
+
+// 결과물 비율 → 픽셀 매핑 (cardnews_final 스킬이 사용)
+const ASPECT_MAP = {
+  '1:1':  { w: 1080, h: 1080, label: '1:1 정사각 (1080×1080)' },
+  '4:5':  { w: 1080, h: 1350, label: '4:5 인스타 캐러셀 (1080×1350)' },
+  '9:16': { w: 1080, h: 1920, label: '9:16 Reels/Shorts (1080×1920)' },
+  '16:9': { w: 1920, h: 1080, label: '16:9 가로 와이드 (1920×1080)' }
+};
+const ASPECTS = Object.keys(ASPECT_MAP);
+
+function applyAspect(ratio) {
+  const m = ASPECT_MAP[ratio];
+  if (!m) return;
+  document.documentElement.style.setProperty('--preview-aspect', `${m.w}/${m.h}`);
+}
+
+function setState(patch) {
+  // Capture scroll positions BEFORE re-render — render() rebuilds innerHTML and resets scroll
+  const SCROLL_IDS = ['panel-left', 'panel-center', 'panel-right'];
+  const scrolls = {};
+  SCROLL_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) scrolls[id] = el.scrollTop;
+  });
+  const winY = window.scrollY;
+
+  Object.assign(state, patch);
+  render();
+
+  // Restore scroll positions so the user stays where they clicked
+  SCROLL_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && scrolls[id] !== undefined) el.scrollTop = scrolls[id];
+  });
+  window.scrollTo(0, winY);
+
+  // Live-apply: 좌측 클릭(팔레트/프리셋/모션/비율/출력/슬롯) 즉시 우측 프리뷰 반영
+  try { applyPreview(); } catch(e) { /* preview not ready on first render */ }
+}
+
+function getActiveSlot() {
+  return state[state.activeSlot];
+}
+
+// Convenience: set preset in active slot
+function setActivePreset(presetId) {
+  setState({ [state.activeSlot]: { ...state[state.activeSlot], preset: presetId } });
+}
+
+// Convenience: set motion in active slot
+function setActiveMotion(motionId) {
+  setState({ [state.activeSlot]: { ...state[state.activeSlot], motion: motionId } });
+}
+
+// Additive byte-offset shade: each RGB channel += round(255 * offsetPct/100), clamped [0,255].
+// NOT an HSL percentage — for dark colors small offsets lift visibly; for light colors they clip near white.
+// Use small offsets (10~30) for "subtly lighter" derived colors like borders and muted text.
+function shade(hex, offsetPct) {
+  const h = hex.replace('#','');
+  const num = parseInt(h, 16);
+  const r = Math.min(255, Math.max(0, ((num >> 16) & 0xff) + Math.round(255 * offsetPct/100)));
+  const g = Math.min(255, Math.max(0, ((num >> 8)  & 0xff) + Math.round(255 * offsetPct/100)));
+  const b = Math.min(255, Math.max(0, (num         & 0xff) + Math.round(255 * offsetPct/100)));
+  return '#' + ((r<<16)|(g<<8)|b).toString(16).padStart(6,'0');
+}
+
+function applyPalette(paletteId) {
+  const p = PALETTES.find(x => x.id === paletteId);
+  if (!p) return;
+  const root = document.documentElement.style;
+  const c = p.colors;
+  const last = c.length - 1;
+  // For 3-color palettes [bg,accent,fg] using c[last-1] would collide with accent.
+  // We derive muted as a darkened fg (visible on bg, distinct from accent).
+  // Palettes with 4+ colors use the explicit c[last-1] as muted.
+  const muted = (c.length >= 4) ? c[last - 1] : shade(c[last], -30);
+  root.setProperty('--current-bg',     c[0]);
+  root.setProperty('--current-accent', c[1]);
+  root.setProperty('--current-fg',     c[last]);
+  root.setProperty('--current-muted',  muted);
+  root.setProperty('--current-line',   shade(c[0], 15));   // bg lifted +15 byte-units → subtle border
+}
+
+// ===== Task 8: Header =====
+function renderHeader() {
+  document.getElementById('app-header').innerHTML = `
+    <div class="h-title">Card News Final · 조합 빌더</div>
+    <div class="h-sub">출력 → 팔레트 → 슬롯(커버/내용/CTA) 토글 후 프리셋·모션 선택 → 프롬프트 자동 생성 → [복사]</div>
+    <div style="margin-top:10px">
+      <span class="h-pill">v3</span>
+      <span class="h-pill" style="background:transparent;color:#8B8B92;border:1px solid #26262c">20 팔레트 × 50 프리셋 × 60 모션 = 60,000 조합</span>
+      <span class="h-pill" style="background:transparent;color:#5a5a64;border:1px solid #26262c;font-weight:500">모션 60 = 출력 4 + 효과 56</span>
+    </div>
+  `;
+}
+
+// ===== Task 10: Left Panel (Aspect → Output Formats → Palettes → Motion list) =====
+function renderPaletteChips() {
+  // Aspect ratio — rendered FIRST (controls preview aspect-ratio + final output dimensions)
+  const aspectHTML = `
+    <div class="section-title-top">📐 비율</div>
+    <div class="aspect-toggle">
+      <div class="aspect-buttons">
+        ${ASPECTS.map(r => `<button class="aspect-btn ${r===state.aspect?'active':''}" data-aspect="${r}">${r}</button>`).join('')}
+      </div>
+      <div class="next-hint" style="margin-top:8px">${ASPECT_MAP[state.aspect].label}</div>
+    </div>
+  `;
+
+  // Output formats — rendered SECOND at top of LEFT panel for emphasis
+  const outputFormats = MOTIONS.filter(m => OUTPUT_IDS.includes(m.id));
+  const outputHTML = `
+    <div class="section-title-top">📦 출력 포맷 (${outputFormats.length} / 60 모션)</div>
+    <div class="output-format-grid">
+      ${outputFormats.map(m => {
+        const demo = MOTION_DEMOS[m.id] || {};
+        return `<div class="of-card ${m.id===state.output?'selected':''}" data-motion="${m.id}">
+          <div class="of-id">${m.id}</div>
+          <div class="of-name">${m.name}</div>
+          <div class="of-desc">${demo.output || m.desc}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="next-hint">→ 다음: 팔레트 선택</div>
+  `;
+
+  // Palette chips
+  const paletteHTML = PALETTES.map(p => {
+    const swatches = p.colors.map(c => `<div style="background:${c}"></div>`).join('');
+    return `<div class="p-chip ${p.id===state.palette?'selected':''}" data-palette="${p.id}">
+      <div class="p-chip-swatch">${swatches}</div>
+      <div class="p-chip-info">
+        <div class="p-chip-code">${p.id}</div>
+        <div class="p-chip-name">${p.name}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('panel-left').innerHTML = `
+    ${aspectHTML}
+    ${outputHTML}
+    <div class="section-title">🌈 팔레트 (${PALETTES.length})</div>
+    <div class="palette-chips">${paletteHTML}</div>
+    <div id="motion-list-mount"></div>
+  `;
+
+  document.querySelectorAll('#panel-left .aspect-btn').forEach(el => {
+    el.addEventListener('click', () => setState({ aspect: el.dataset.aspect }));
+  });
+  document.querySelectorAll('#panel-left .of-card').forEach(el => {
+    el.addEventListener('click', () => setState({ output: el.dataset.motion }));
+  });
+  document.querySelectorAll('.p-chip').forEach(el => {
+    el.addEventListener('click', () => setState({ palette: el.dataset.palette }));
+  });
+}
+
+// ===== Task 11: Motion List =====
+const OUTPUT_IDS = ['M-1','M-2','M-3','M-4'];
+
+function getDemoIcon(id) {
+  const t = (MOTION_DEMOS[id] || {}).type;
+  if (t === 'label')     return '🏷️';
+  if (t === 'animation') return '▶';
+  if (t === 'js')        return '▶';
+  return '◌';
+}
+
+function renderMotionList() {
+  // Output formats are now rendered at TOP of LEFT panel (renderPaletteChips).
+  // This function only renders the 56-motion list grouped by category.
+  const activeSlot = getActiveSlot();
+  const ranks = PAIRINGS[activeSlot.preset] || [];
+  const otherMotions = MOTIONS.filter(m => !OUTPUT_IDS.includes(m.id));
+
+  const groups = {};
+  otherMotions.forEach(m => {
+    if (!groups[m.category]) groups[m.category] = [];
+    groups[m.category].push(m);
+  });
+  const listHTML = Object.entries(groups).map(([cat, list]) => `
+    <div class="m-cat">${cat}</div>
+    ${list.map(m => {
+      const r = ranks.indexOf(m.id);
+      const rankBadge = r === 0 ? '<span class="m-rank">⭐ 1</span>'
+                      : r === 1 ? '<span class="m-rank r2">2</span>'
+                      : r === 2 ? '<span class="m-rank r3">3</span>'
+                      : '';
+      const demoIcon = getDemoIcon(m.id);
+      return `<div class="m-item ${m.id===activeSlot.motion?'selected':''}" data-motion="${m.id}">
+        <span class="m-id">${m.id}</span>
+        <span class="m-demo-icon" title="${(MOTION_DEMOS[m.id]||{}).type||'none'}">${demoIcon}</span>
+        <span class="m-name">${m.name}</span>
+        ${rankBadge}
+      </div>`;
+    }).join('')}
+  `).join('');
+
+  const mount = document.getElementById('motion-list-mount');
+  if (!mount) return;
+  mount.innerHTML = `
+    <div class="section-title">🎬 모션 효과 (${otherMotions.length} / 60 모션)</div>
+    <div class="motion-list">${listHTML}</div>
+  `;
+  mount.querySelectorAll('.m-item').forEach(el => {
+    el.addEventListener('click', () => setActiveMotion(el.dataset.motion));
+  });
+}
+
+// ===== Task 12: Preset Grid =====
+const CAT_DESC = {
+  Classic:    '안정적·검증된 — 텍스트·정보 중심 콘텐츠',
+  Trendy:     '2024-2026 트렌드 — 시각적 임팩트 중심',
+  Typography: '타이포 히어로 — 글자가 주인공',
+  Data:       '정보·인포그래픽 — 수치/데이터 콘텐츠',
+  Novelty:    '실험적·신박 — 강한 인상이 필요할 때'
+};
+
+function renderPresetGrid() {
+  const activeSlot = getActiveSlot();
+  const banner = `<div class="active-slot-banner">현재 편집: <b>${SLOT_LABELS[state.activeSlot]}</b> 슬롯 — 프리셋·모션 클릭이 이 슬롯에 저장됩니다</div>`;
+  const cats = ['Classic','Trendy','Typography','Data','Novelty'];
+  const html = cats.map(cat => {
+    const list = PRESETS.filter(p => p.category === cat);
+    const cards = list.map(p => `
+      <div class="preset-card ${p.id===activeSlot.preset?'selected':''}" data-preset="${p.id}">
+        <div class="pc-mark" data-mark="${p.name}">${renderMiniMark(p)}</div>
+        <div class="pc-info">
+          <div class="pc-id">${p.id}</div>
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-desc">${p.desc}</div>
+        </div>
+      </div>
+    `).join('');
+    return `<div class="preset-section">
+      <h2>${cat} <span style="font-weight:400;color:#8B8B92;font-size:14px">(${list.length})</span></h2>
+      <div class="ps-desc">${CAT_DESC[cat]}</div>
+      <div class="preset-grid">${cards}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('panel-center').innerHTML = banner + html;
+  document.querySelectorAll('.preset-card').forEach(el => {
+    el.addEventListener('click', () => setActivePreset(el.dataset.preset));
+  });
+}
+
+// ===== Task 13~17: Mini-Marks =====
+function renderMiniMark(p) {
+  switch (p.id) {
+    // Classic (F-1 ~ F-10)
+    case 'F-1':  return `<div class="mm-hero-bold">중요한<br><span>한 마디</span></div>`;
+    case 'F-2':  return `<div class="mm-list-card">
+      <div class="mli"><b>01</b> 첫 번째 항목</div>
+      <div class="mli"><b>02</b> 두 번째 항목</div>
+      <div class="mli"><b>03</b> 세 번째 항목</div>
+    </div>`;
+    case 'F-3':  return `<div class="mm-quote-center"><div class="q">"</div><div class="t">기억할<br>한 줄</div></div>`;
+    case 'F-4':  return `<div class="mm-stat-focus"><div class="num">87</div><div class="lbl">PERCENT</div></div>`;
+    case 'F-5':  return `<div class="mm-photo-frame"><div class="ph"></div><div class="tx">PHOTO + TEXT</div></div>`;
+    case 'F-6':  return `<div class="mm-editorial"><div class="ed-num">N° 01</div><div class="ed-t">EDITORIAL</div></div>`;
+    case 'F-7':  return `<div class="mm-grid-poster"><div>A</div><div>B</div><div>C</div><div>D</div></div>`;
+    case 'F-8':  return `<div class="mm-split-screen"><div class="l">VS</div><div class="r">GO</div></div>`;
+    case 'F-9':  return `<div class="mm-headline-news"><span class="tag">NEWS</span><div class="h">큰 헤드라인</div><div class="sub">subtitle here</div></div>`;
+    case 'F-10': return `<div class="mm-checklist"><div class="ck">완료한 것</div><div class="ck">완료한 것</div><div class="ck">완료한 것</div></div>`;
+    // Trendy (F-11 ~ F-25)
+    case 'F-11': return `<div class="mm-neo-brutalism">BRUTAL</div>`;
+    case 'F-12': return `<div class="mm-risograph"><div class="t">RISO</div></div>`;
+    case 'F-13': return `<div class="mm-glass-morphism"><div class="glass">GLASS</div></div>`;
+    case 'F-14': return `<div class="mm-y2k-chrome">Y2K</div>`;
+    case 'F-15': return `<div class="mm-bauhaus"><div></div><div></div><div></div><div></div></div>`;
+    case 'F-16': return `<div class="mm-claymorphism"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>`;
+    case 'F-17': return `<div class="mm-memphis"><div class="t">POP</div></div>`;
+    case 'F-18': return `<div class="mm-vaporwave"><div class="sun"></div><div class="grid"></div></div>`;
+    case 'F-19': return `<div class="mm-sticker-pop"><div class="sticker">WOW!</div></div>`;
+    case 'F-20': return `<div class="mm-tape-label"><div class="tape">BREAKING</div></div>`;
+    case 'F-21': return `<div class="mm-newspaper"><div class="top">TIMES · 1926</div><div class="h">Big News</div><div class="body">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore.</div></div>`;
+    case 'F-22': return `<div class="mm-retro-tv"><div class="screen">▶ ON AIR</div></div>`;
+    case 'F-23': return `<div class="mm-zine"><div class="t">ZINE</div><div class="stamp">cut & paste</div></div>`;
+    case 'F-24': return `<div class="mm-polaroid"><div class="pic"></div><div class="ph-cap">2026.04</div></div>`;
+    case 'F-25': return `<div class="mm-marker-sketch"><div class="h">중요한 포인트</div><div class="sub">오늘의 한마디</div></div>`;
+    // Typography (F-26 ~ F-33)
+    case 'F-26': return `<div class="mm-faux-3d-text">3D</div>`;
+    case 'F-27': return `<div class="mm-kinetic-typo"><span>K</span><span>I</span><span>N</span></div>`;
+    case 'F-28': return `<div class="mm-typewriter">typing</div>`;
+    case 'F-29': return `<div class="mm-outline-text">OUT</div>`;
+    case 'F-30': return `<div class="mm-graffiti">YO!</div>`;
+    case 'F-31': return `<div class="mm-serif-mono"><div class="a">Style</div><div class="b">MONO · 2026</div></div>`;
+    case 'F-32': return `<div class="mm-stamp-text">STAMP</div>`;
+    case 'F-33': return `<div class="mm-ransom-note"><span>R</span><span>A</span><span>N</span><span>S</span></div>`;
+    // Data (F-34 ~ F-42)
+    case 'F-34': return `<div class="mm-infographic"><div class="ico">📊</div><div><div class="v">87%</div><div class="l">METRIC</div></div></div>`;
+    case 'F-35': return `<div class="mm-timeline">
+      <div class="line">
+        <div class="dot" style="left:10%"></div><div class="lbl" style="left:10%">2024</div>
+        <div class="dot" style="left:50%"></div><div class="lbl" style="left:50%">2025</div>
+        <div class="dot" style="left:90%"></div><div class="lbl" style="left:90%">2026</div>
+      </div>
+    </div>`;
+    case 'F-36': return `<div class="mm-comparison-table"><div class="a">A</div><div class="vs">VS</div><div class="b">B</div></div>`;
+    case 'F-37': return `<div class="mm-bar-chart"><div style="height:30%"></div><div style="height:60%"></div><div style="height:90%"></div><div style="height:50%"></div><div style="height:75%"></div></div>`;
+    case 'F-38': return `<div class="mm-donut-chart"><div class="pct">70%</div></div>`;
+    case 'F-39': return `<div class="mm-flow-diagram"><div class="node">A</div><div class="arrow">→</div><div class="node">B</div><div class="arrow">→</div><div class="node">C</div></div>`;
+    case 'F-40': return `<div class="mm-mind-map"><div class="leaf l1">A1</div><div class="leaf l2">A2</div><div class="center">CORE</div><div class="leaf l3">A3</div><div class="leaf l4">A4</div></div>`;
+    case 'F-41': return `<div class="mm-ranking-list">
+      <div class="row"><span class="rk">01</span><span>최고</span></div>
+      <div class="row"><span class="rk">02</span><span>좋음</span></div>
+      <div class="row"><span class="rk">03</span><span>보통</span></div>
+    </div>`;
+    case 'F-42': return `<div class="mm-before-after"><div class="b">BEFORE</div><div class="a">AFTER</div></div>`;
+    // Novelty (F-43 ~ F-50)
+    case 'F-43': return `<div class="mm-holographic">HOLO</div>`;
+    case 'F-44': return `<div class="mm-liquid-metal">LIQUID</div>`;
+    case 'F-45': return `<div class="mm-aurora">AURORA</div>`;
+    case 'F-46': return `<div class="mm-neon-sign"><div class="t">NEON</div></div>`;
+    case 'F-47': return `<div class="mm-crystal-facet"></div>`;
+    case 'F-48': return `<div class="mm-shader-mesh"></div>`;
+    case 'F-49': return `<div class="mm-ai-dream">DREAM</div>`;
+    case 'F-50': return `<div class="mm-data-matrix">01010101 11001010<br>10110100 01011010<br>11010101 10100101<br>01010101 11001010<br>10110100 01011010</div>`;
+    default: return `<div style="font-size:14px;font-weight:800">${p.id}</div>`;
+  }
+}
+
+// ===== Task 18 + 20: Right Panel =====
+function buildPrompt(s) {
+  const palette = PALETTES.find(p => p.id === s.palette);
+  const output  = MOTIONS.find(m => m.id === s.output);
+  const pCover   = PRESETS.find(p => p.id === s.cover.preset);
+  const pContent = PRESETS.find(p => p.id === s.content.preset);
+  const pCta     = PRESETS.find(p => p.id === s.cta.preset);
+  const mCover   = MOTIONS.find(m => m.id === s.cover.motion);
+  const mContent = MOTIONS.find(m => m.id === s.content.motion);
+  const mCta     = MOTIONS.find(m => m.id === s.cta.motion);
+  const aspect = ASPECT_MAP[s.aspect] || ASPECT_MAP['1:1'];
+  return [
+    'cardnews 스킬로 만들어줘.',
+    '',
+    `[출력] ${output.id} (${output.name})`,
+    `[비율] ${s.aspect} (${aspect.w}×${aspect.h})`,
+    `[팔레트] ${palette.id} (${palette.name})`,
+    '',
+    '[프리셋]',
+    `- 커버: ${pCover.id} (${pCover.name})`,
+    `- 내용: ${pContent.id} (${pContent.name})`,
+    `- CTA: ${pCta.id} (${pCta.name})`,
+    '',
+    '[모션]',
+    `- 커버: ${mCover.id} (${mCover.name})`,
+    `- 내용: ${mContent.id} (${mContent.name})`,
+    `- CTA: ${mCta.id} (${mCta.name})`,
+    '',
+    `주제: ${s.topic || '[여기에 주제 입력]'}`
+  ].join('\n');
+}
+
+function renderRightPanel() {
+  // Slot toggle at TOP, then 5-row combo display
+  const slotToggleHTML = `
+    <div class="slot-toggle">
+      <div class="slot-toggle-label">현재 편집 중:</div>
+      <div class="slot-toggle-buttons">
+        <button class="slot-btn ${state.activeSlot==='cover'?'active':''}" data-slot="cover">
+          커버 <span class="slot-btn-id">${state.cover.preset} · ${state.cover.motion}</span>
+        </button>
+        <button class="slot-btn ${state.activeSlot==='content'?'active':''}" data-slot="content">
+          내용 <span class="slot-btn-id">${state.content.preset} · ${state.content.motion}</span>
+        </button>
+        <button class="slot-btn ${state.activeSlot==='cta'?'active':''}" data-slot="cta">
+          CTA <span class="slot-btn-id">${state.cta.preset} · ${state.cta.motion}</span>
+        </button>
+      </div>
+    </div>
+  `;
+  const comboHTML = `
+    <div class="combo-display">
+      <div class="combo-row"><span class="combo-label">출력</span><span class="combo-value">${state.output}</span></div>
+      <div class="combo-row"><span class="combo-label">팔레트</span><span class="combo-value">${state.palette}</span></div>
+      <div class="combo-row slot-row ${state.activeSlot==='cover'?'active':''}"><span class="combo-label">커버</span><span class="combo-value">${state.cover.preset} · ${state.cover.motion}</span></div>
+      <div class="combo-row slot-row ${state.activeSlot==='content'?'active':''}"><span class="combo-label">내용</span><span class="combo-value">${state.content.preset} · ${state.content.motion}</span></div>
+      <div class="combo-row slot-row ${state.activeSlot==='cta'?'active':''}"><span class="combo-label">CTA</span><span class="combo-value">${state.cta.preset} · ${state.cta.motion}</span></div>
+    </div>
+  `;
+  document.getElementById('panel-right').innerHTML = `
+    ${slotToggleHTML}
+    ${comboHTML}
+    <div class="prompt-area">
+      <label>📝 프롬프트 (편집 가능 — 「주제」 부분 채우세요)</label>
+      <textarea id="prompt-text"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-apply" id="btn-apply">적용</button>
+      <button class="btn btn-copy" id="btn-copy">📋 복사</button>
+    </div>
+    <div class="preview-mount">
+      <div class="pv-lbl">🖼️ 프리뷰</div>
+      <div class="preview-canvas" id="preview-canvas">
+        <div style="color:#8B8B92;font-size:11px;text-align:center">「적용」 버튼을 누르면<br>여기 미리보기가 표시됩니다</div>
+      </div>
+    </div>
+  `;
+  const ta = document.getElementById('prompt-text');
+  ta.value = buildPrompt(state);
+  ta.addEventListener('input', () => {
+    const m = ta.value.match(/^주제:\s*(.*)$/m);
+    if (m) state.topic = m[1].replace(/^\[.*\]$/, '').trim();
+  });
+  document.querySelectorAll('.slot-btn').forEach(el => {
+    el.addEventListener('click', () => setState({ activeSlot: el.dataset.slot }));
+  });
+  document.getElementById('btn-apply').addEventListener('click', applyPreview);
+  document.getElementById('btn-copy').addEventListener('click', copyPrompt);
+}
+
+function applyPreview() {
+  state.applied = { ...state };
+  const canvas = document.getElementById('preview-canvas');
+  const slot   = getActiveSlot();
+  const preset = PRESETS.find(p => p.id === slot.preset);
+  const motion = MOTIONS.find(m => m.id === slot.motion);
+  const demo   = MOTION_DEMOS[slot.motion] || { type:'none' };
+  if (!preset || !canvas) return;
+
+  // Reset canvas
+  canvas.className = 'preview-canvas';
+  canvas.innerHTML = '';
+
+  // ALWAYS render the preset mini-mark first — it must persist.
+  // Motion is applied as overlay/animation on top, never as replacement.
+  canvas.innerHTML = `<div class="preview-content">${renderMiniMark(preset)}</div>`;
+  canvas.style.fontSize = '1.5em';
+  const content = canvas.querySelector('.preview-content');
+
+  if (demo.type === 'animation') {
+    // CSS animation runs on the existing preset content
+    content.classList.add('demo-anim', demo.anim);
+    // Force reflow so re-applying the same animation restarts it.
+    void content.offsetWidth;
+  } else if (demo.type === 'js') {
+    // JS demo functions mutate existing content in place — they do NOT replace it
+    if (typeof window[demo.fn] === 'function') {
+      try { window[demo.fn](content); } catch (e) { console.warn('demo fn failed', demo.fn, e); }
+    }
+  } else if (demo.type === 'label') {
+    // Output formats (M-1~M-4) don't apply visual effects to preview.
+    // Their selection is already visible in: combo code, prompt textarea, LEFT panel highlight.
+    // Preview just shows the static preset mini-mark — no caption overlay.
+  } else { // 'none'
+    canvas.insertAdjacentHTML('beforeend',
+      `<div class="preview-caption">◌ 이 모션(<b>${motion ? motion.name : slot.motion}</b>)은 실시간 미리보기 불가<br><small>cardnews 스킬이 실제로 생성합니다</small></div>`);
+  }
+}
+
+// ===== Sprint 6: JS-driven demo functions (Demo Overlay Fix) =====
+// Each function MUST animate the existing preset content, not replace it.
+// They locate the dominant text element via findMainTextEl() and mutate it.
+
+// Helper: find the most prominent text element in the preview content.
+// Picks the leaf element (no children) with the largest computed font-size.
+function findMainTextEl(content) {
+  let best = null;
+  let bestSize = 0;
+  content.querySelectorAll('*').forEach(el => {
+    const text = el.textContent.trim();
+    const hasOnlyText = el.children.length === 0 && text.length > 0;
+    if (!hasOnlyText) return;
+    const size = parseFloat(getComputedStyle(el).fontSize) || 0;
+    if (size > bestSize) {
+      best = el;
+      bestSize = size;
+    }
+  });
+  return best;
+}
+
+function demoTypewriter(content) {
+  const target = findMainTextEl(content);
+  if (!target) return;
+  const fullText = target.textContent;
+  target.textContent = '';
+  let i = 0;
+  const tick = () => {
+    if (i <= fullText.length) {
+      target.textContent = fullText.slice(0, i) + (i < fullText.length ? '|' : '');
+      i++;
+      setTimeout(tick, 50);
+    } else {
+      target.textContent = fullText;
+    }
+  };
+  tick();
+}
+
+function demoWordByWord(content) {
+  const target = findMainTextEl(content);
+  if (!target) return;
+  const fullText = target.textContent;
+  let words = fullText.split(/\s+/).filter(s => s);
+  // Fallback: 단어 1개(한국어 띄어쓰기 없는 텍스트, 짧은 라벨 등)면 글자 단위로 분리
+  // → "중요한 한 마디", "VS", "GO" 같은 짧은 텍스트도 word-by-word 효과 보임
+  if (words.length <= 1) {
+    words = fullText.replace(/\s+/g, '').split('');
+  }
+  target.textContent = '';
+  let i = 0;
+  const tick = () => {
+    if (i < words.length) {
+      target.textContent = words.slice(0, i + 1).join(' ');
+      i++;
+      setTimeout(tick, 200);
+    }
+  };
+  tick();
+}
+
+function demoLetterDrop(content) {
+  const target = findMainTextEl(content);
+  if (!target) return;
+  const chars = [...target.textContent];
+  target.innerHTML = chars.map((c, i) =>
+    `<span style="display:inline-block;animation:demo-letter-drop 0.5s ease ${i * 60}ms backwards">${c === ' ' ? '&nbsp;' : c}</span>`
+  ).join('');
+}
+
+function demoLetterSpring(content) {
+  const target = findMainTextEl(content);
+  if (!target) return;
+  const chars = [...target.textContent];
+  target.innerHTML = chars.map((c, i) =>
+    `<span style="display:inline-block;animation:demo-letter-spring 0.7s cubic-bezier(0.5,1.5,0.5,1) ${i * 50}ms backwards">${c === ' ' ? '&nbsp;' : c}</span>`
+  ).join('');
+}
+
+function demoScramble(content) {
+  const target = findMainTextEl(content);
+  if (!target) return;
+  const final = target.textContent;
+  const chars = '!@#$%^&*ABCDEFGHIJKLMNOPQRSTUVWXYZ가나다라마바사아자차카타파하';
+  let frame = 0;
+  const total = 20;
+  const tick = () => {
+    if (frame < total) {
+      const ratio = frame / total;
+      target.textContent = [...final].map((c, i) =>
+        i / final.length < ratio ? c : chars[Math.floor(Math.random() * chars.length)]
+      ).join('');
+      frame++;
+      setTimeout(tick, 50);
+    } else {
+      target.textContent = final;
+    }
+  };
+  tick();
+}
+
+function demoMorphNumber(content) {
+  const target = findMainTextEl(content);
+  if (!target) return;
+  const finalNum = parseInt(target.textContent, 10);
+  if (isNaN(finalNum)) return;  // not a number — skip silently
+  let frame = 0;
+  const total = 30;
+  const tick = () => {
+    frame++;
+    const curr = Math.round((frame / total) * finalNum);
+    target.textContent = curr;
+    if (frame < total) setTimeout(tick, 40);
+    else target.textContent = finalNum;
+  };
+  tick();
+}
+
+// Expose to window for dispatch by name
+window.demoTypewriter   = demoTypewriter;
+window.demoWordByWord   = demoWordByWord;
+window.demoLetterDrop   = demoLetterDrop;
+window.demoLetterSpring = demoLetterSpring;
+window.demoScramble     = demoScramble;
+window.demoMorphNumber  = demoMorphNumber;
+
+function copyPrompt() {
+  const ta = document.getElementById('prompt-text');
+  navigator.clipboard.writeText(ta.value).then(() => {
+    const btn = document.getElementById('btn-copy');
+    btn.classList.add('copied');
+    btn.textContent = '✓ 복사됨';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '📋 복사';
+    }, 1500);
+  });
+}
+
+function render() {
+  renderHeader();
+  applyPalette(state.palette);
+  applyAspect(state.aspect);
+  renderPaletteChips();
+  renderMotionList();
+  renderPresetGrid();
+  renderRightPanel();
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.sublime-*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+*.egg-info/
+
+# 사용자 출력 (실제 카드뉴스 결과물)
+output/
+generated/
+*.png
+*.gif
+*.mp4
+!docs/screenshots/*.png
+!docs/screenshots/*.gif
+
+# 백업 / 임시
+*-backup-*.html
+*-backup-*.md
+.bak/
+*.tmp
+*.swp
+
+# 환경
+.env
+.env.local
+.env.*.local
+
+# 보안 (절대 커밋 금지)
+privacy.md
+secrets/
+.secrets/
+*.key
+*.pem
+
+# Claude Code 하네스 임시 상태 (절대 커밋 금지 — 절대 경로/사용자명 노출 위험)
+.omc/
+**/.omc/
+.bkit/
+**/.bkit/
+.claude/local/
+
+# Inter 폰트 (외부 사용자가 promo/README.md 안내 따라 직접 다운로드)
+# Pretendard-Black.otf는 정상 (SIL OFL 1.1 재배포 OK)
+promo/fonts/Inter-*.ttf
+
+# 보안 검수 내부 리포트 (PII 포함 가능 — 외부 배포 금지)
+security-audit/
+
+# webm 임시 녹화 (명시 차단)
+*.webm
+
+# 로그
+*.log
+npm-debug.log*
+
+# Node (Remotion 사용 시)
+node_modules/
+.remotion/
+
+# Promo video build artifacts
+promo/frames/
+promo/bgm.mp3
+promo/output/raw.mp4
+promo/output/subbed.mp4
+promo/output/cardnews-promo-v1-noaudio.mp4
+promo/output/concat.txt
+# Allow final promo video (overrides *.mp4 above)
+!promo/output/cardnews-promo-v1.mp4
