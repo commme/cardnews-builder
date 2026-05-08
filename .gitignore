@@ -63,6 +63,12 @@ security-audit/
 # webm 임시 녹화 (명시 차단)
 *.webm
 
+# 외부 사용자에게 불필요한 폴더 (배포에서 제외)
+# - promo/: 홍보영상 제작 도구 (내부용)
+# - scripts/: PIL 헬퍼 (Claude Code가 SKILL.md §2.4 매핑 보고 직접 작성)
+promo/
+scripts/
+
 # 로그
 *.log
 npm-debug.log*

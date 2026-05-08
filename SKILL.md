@@ -103,7 +103,7 @@ line   = shade(bg, 15)
 - 각 컷에 어떤 프리셋·모션 적용할지 슬롯 매핑(§2.2) 따라 결정
 
 ### Step 4. 출력 생성
-- M-1: `scripts/pil_helpers.py`의 헬퍼 호출 → 1080×1350 PNG 8장 → `output/` 디렉토리에 저장
+- M-1: Claude Code가 PIL(Pillow)로 직접 1080×1350 PNG 8장 생성 → `output/` 디렉토리에 저장 (팔레트 색·프리셋 레이아웃·폰트는 본 SKILL의 §2.4·§2.5 매핑 따라 적용)
 - M-2/M-3: 위 PNG 8장 + FFmpeg 호출
 - M-4: Remotion `.tsx` 코드 생성
 
@@ -112,7 +112,7 @@ line   = shade(bg, 15)
 - Python 3.9+
 - Pillow (`pip install Pillow`)
 - FFmpeg (선택, M-2/M-3 출력 시)
-- 폰트: Pretendard Variable (`scripts/pil_helpers.py`가 시스템에서 자동 탐색)
+- 폰트: Pretendard Variable (Claude Code가 PIL 코드 작성 시 시스템에서 자동 탐색)
 
 ## 5. 트리거 키워드
 

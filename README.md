@@ -28,13 +28,13 @@
 ### 1. 설치
 
 ```bash
-git clone https://github.com/<your-username>/cardnews-builder.git
+git clone https://github.com/commme/cardnews-builder.git
 cp -r cardnews-builder ~/.claude/skills/cardnews
 ```
 
 > Windows PowerShell:
 > ```powershell
-> git clone https://github.com/<your-username>/cardnews-builder.git
+> git clone https://github.com/commme/cardnews-builder.git
 > Copy-Item -Recurse cardnews-builder $env:USERPROFILE\.claude\skills\cardnews
 > ```
 
@@ -95,8 +95,6 @@ cardnews/
 ├── references/
 │   ├── motion-advanced.md
 │   └── preset-motion-pairings.md
-├── scripts/
-│   └── pil_helpers.py              ← PIL 헬퍼 (PNG 생성)
 └── .gitignore
 ```
 
@@ -111,7 +109,7 @@ A. 빌더의 미니 카드 미리보기는 데모용 단순화 버전이고, 실
 A. 모션 효과는 M-2(GIF) / M-3(Reels MP4) / M-4(Remotion) 출력에만 적용됨. M-1(PNG)은 정적 8장이라 효과는 카피 문구의 등장 순서·강조에만 반영.
 
 **Q. 폰트가 안 나와요.**
-A. Pretendard Variable이 시스템에 없어서 그래요. macOS/Linux: 시스템에 폰트 설치, Windows: 폰트 폴더에 ttf 추가. 또는 `scripts/pil_helpers.py`의 `FONT_PATH`를 직접 지정.
+A. Pretendard Variable이 시스템에 없어서 그래요. macOS/Linux: 시스템에 폰트 설치, Windows: 폰트 폴더에 ttf 추가. Claude Code가 PNG 생성 시 PIL의 `FONT_PATH`를 직접 지정해서 풀어줄 수 있어요.
 
 ---
 
