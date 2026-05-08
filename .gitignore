@@ -26,8 +26,6 @@ generated/
 *.mp4
 !docs/screenshots/*.png
 !docs/screenshots/*.gif
-# OG image (SNS 공유 미리보기 — 외부 배포 OK)
-!og-image.png
 
 # 백업 / 임시
 *-backup-*.html
