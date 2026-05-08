@@ -3,6 +3,10 @@
 > Claude Code용 인스타그램 카드뉴스 8컷 자동 생성 스킬.
 > 빌더에서 클릭만 하면 일관된 디자인의 8컷이 PNG/GIF/MP4로 나옵니다.
 
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-commme.github.io-00F5A0?style=for-the-badge)](https://commme.github.io/cardnews-builder/) [![License](https://img.shields.io/badge/License-MIT-DA7756?style=for-the-badge)](LICENSE)
+
+> **빠르게 체험**: [https://commme.github.io/cardnews-builder/](https://commme.github.io/cardnews-builder/) — 클론 없이 브라우저에서 바로 빌더 사용 가능. 프롬프트 복사 → Claude Code에 붙여넣기.
+
 ---
 
 ## 무엇을 만들 수 있나
